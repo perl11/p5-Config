@@ -1,0 +1,16 @@
+Changes
+Config.pm
+Config_mini.pl.PL
+Config_xs.in
+Config_xs.out
+Config_xs.PL
+Config_xs_heavy.pl.PL
+Dummy.c
+Makefile.PL
+MANIFEST
+README
+regen/regen_lib.pl
+t/Config.t
+t/XSConfig.t
+test.pl
+typemap
