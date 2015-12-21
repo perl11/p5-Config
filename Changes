@@ -1,5 +1,8 @@
 Revision history for XSConfig
 
+6.00_02 Mon, Dec 21, 2015  2:40:53 AM
+        -more diagnostics for CPAN Testers
+
 6.00_01 Sun, Dec 20, 2015 10:20:43 PM
         -CPAN Testers fixes
         -appveyor console log fix

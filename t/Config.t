@@ -1,7 +1,13 @@
 #!./perl -w
 
 BEGIN {
-    require "test.pl";
+    eval { require "test.pl"; };
+#diag http://cpantesters.org/cpan/report/776d6d18-a7ac-11e5-af33-cae9e0bfc7aa
+    if ($@) {
+        require Data::Dumper;
+        print Data::Dumper::Dumper(\%INC);
+        print Data::Dumper::Dumper(\@INC);
+    }
 
     plan ('no_plan');
 

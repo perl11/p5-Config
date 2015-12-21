@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.00_01';
+$VERSION = '6.00_02';
 my $in_core;
 
 BEGIN {
@@ -115,7 +115,12 @@ unless ($no_gperf) {
     print STDERR "gperf ",$gperf_ok ? "works ok\n" : "does not work\n";
     if ($gperf_ok) {
 #diag http://cpantesters.org/cpan/report/e334bb42-a77e-11e5-9410-f17aaf845ad4
-        system('gperf -v') if $ENV{AUTOMATED_TESTING};
+        unless ($in_core) {
+            require Data::Dumper;
+            print Data::Dumper::Dumper(\%ENV);
+            print `gperf -v`;
+            print `gperf -h`;
+        }
     } else {
         local $/;
         my $msg = <DATA>;
@@ -141,7 +146,7 @@ if ($gperf_ok) {
                     libdb_needs_pthread mad malloc_cflags sysroot targetdir
                     targetenv targethost targetmkdir targetport
                     useversionedarchname);
-    unless($in_core) { #cperl doesn't need these, CPAN does
+    unless ($in_core) { #cperl doesn't need these, CPAN does
         push @cannedkeys , qw(
 d_acosh d_asinh d_atanh d_backtrace     d_builtin_arith_overflow        d_cbrt
 d_copysign      d_dladdr        d_erf   d_erfc  d_exp2  d_expm1 d_fdim
