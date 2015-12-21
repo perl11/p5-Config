@@ -1,5 +1,9 @@
 Revision history for XSConfig
 
+6.00_01 Sun, Dec 20, 2015 10:20:43 PM
+        -CPAN Testers fixes
+        -appveyor console log fix
+
 6.00    Sun, Dec 20, 2015 10:50:17 AM
         First version, released on an unsuspecting world.
 

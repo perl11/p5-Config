@@ -47,7 +47,8 @@ sub postamble {
     # inference rules are triggered only by disk files with the same base name,
     # not psuedotargets with the same base name, so specify the dependency
     # explicitly, dmake doesn't need this
-    return $_[0]->is_make_type('nmake')
+    # is_make_type meth existed only in EUMM on Win32 until EUMM 7.02
+    return $_[0]->can('is_make_type') && $_[0]->is_make_type('nmake')
         ? '$(OBJECT) : Config.c'."\n\n".'Config.c : Config.xs'
         : '';
 }

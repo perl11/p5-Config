@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.00';
+$VERSION = '6.00_01';
 my $in_core;
 
 BEGIN {
@@ -113,7 +113,10 @@ unless ($no_gperf) {
     }
     unlink $xsout."_tmp";
     print STDERR "gperf ",$gperf_ok ? "works ok\n" : "does not work\n";
-    unless($gperf_ok) {
+    if ($gperf_ok) {
+#diag http://cpantesters.org/cpan/report/e334bb42-a77e-11e5-9410-f17aaf845ad4
+        system('gperf -v') if $ENV{AUTOMATED_TESTING};
+    } else {
         local $/;
         my $msg = <DATA>;
         eval $msg;
@@ -130,13 +133,41 @@ if ($gperf_ok) {
         my $k = "config_arg".$_;
         $h{$k} = '' unless exists $h{$k};
     }
-    for my $k (qw(  bin_ELF bootstrap_charset canned_gperf ccstdflags ccwarnflags
+    my @cannedkeys =
+               qw(  bin_ELF bootstrap_charset canned_gperf ccstdflags ccwarnflags
                     charsize config_argc config_args d_re_comp d_regcmp git_ancestor
                     git_remote_branch git_unpushed hostgenerate hostosname hostperl
                     incpth installhtmldir installhtmlhelpdir ld_can_script
                     libdb_needs_pthread mad malloc_cflags sysroot targetdir
                     targetenv targethost targetmkdir targetport
-                    useversionedarchname)) {
+                    useversionedarchname);
+    unless($in_core) { #cperl doesn't need these, CPAN does
+        push @cannedkeys , qw(
+d_acosh d_asinh d_atanh d_backtrace     d_builtin_arith_overflow        d_cbrt
+d_copysign      d_dladdr        d_erf   d_erfc  d_exp2  d_expm1 d_fdim
+d_fegetround    d_fma   d_fmax  d_fmin  d_fp_classify   d_fp_classl
+d_fpgetround    d_fs_data_s     d_fstatfs       d_fstatvfs      d_getfsstat
+d_getmnt        d_getmntent     d_hasmntopt     d_hypot d_ilogb d_ip_mreq
+d_ip_mreq_source        d_ipv6_mreq_source      d_isfinitel     d_isinfl
+d_isless        d_isnormal      d_j0    d_j0l   d_lc_monetary_2008
+d_ldexpl        d_lgamma        d_lgamma_r      d_libname_unique
+d_llrint        d_llrintl       d_llround       d_llroundl      d_log1p d_log2
+d_logb  d_lrint d_lrintl        d_lround        d_lroundl       d_nan
+d_nearbyint     d_nextafter     d_nexttoward    d_ptrdiff_t     d_regcomp
+d_remainder     d_remquo        d_rint  d_round d_scalbn        d_sfio  d_stat
+d_statfs_f_flags        d_statfs_s      d_statvfs       d_tgamma        d_trunc
+d_truncl        d_ustat d_vms_case_sensitive_symbols    d_wcscmp
+d_wcsxfrm       defvoidused     dl_so_eq_ext    doubleinfbytes  doublekind
+doublemantbits  doublenanbytes  git_commit_date hash_func       i_bfd   i_dld
+i_execinfo      i_fenv  i_mntent        i_quadmath      i_sfio  i_stdint
+i_sysmount      i_sysstatfs     i_sysstatvfs    i_sysvfs        i_ustat
+ieeefp_h        longdblinfbytes longdblkind     longdblmantbits longdblnanbytes
+madlyh  madlyobj        madlysrc        nvmantbits      targetsh
+usecbacktrace   usecperl        usequadmath     usesfio voidflags
+        );
+    }
+
+    for my $k (@cannedkeys) {
         $h{$k} = '' unless exists $h{$k};
     }
     gen_gperf_Config($xsin, $xsout, \%h); #generate git tracked
@@ -425,5 +456,6 @@ my $cp437msg =
 ÛÛº  ÛÛºÛÛÛÛÛÛÛ»ÛÛÛÛÛÛÉ¼ÈÛÛÛÛÛÛÉ¼ÛÛºÛÛÛÛÛÛÛ»ÛÛÛÛÛÛÉ¼
 ÈÍ¼  ÈÍ¼ÈÍÍÍÍÍÍ¼ÈÍÍÍÍÍ¼  ÈÍÍÍÍÍ¼ ÈÍ¼ÈÍÍÍÍÍÍ¼ÈÍÍÍÍÍ¼
 ';
-
-print $^O eq 'MSWin32'? $cp437msg : $utf8msg;
+#appveyor's console->html converter assumes console output is utf8 even though
+#console is set to CP 437
+print $^O eq 'MSWin32' && ! $ENV{APPVEYOR} ? $cp437msg : $utf8msg;

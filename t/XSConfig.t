@@ -26,6 +26,8 @@ unless (isXSUB($cv)) {
   }
 }
 
+my $in_core = ! -d "regen";
+
 # change the class name of XS Config so there can be XS and PP Config at same time
 foreach (qw( TIEHASH DESTROY DELETE CLEAR EXISTS NEXTKEY FIRSTKEY KEYS SCALAR FETCH)) {
   *{'XSConfig::'.$_} = *{'Config::'.$_}{CODE};
@@ -68,13 +70,40 @@ if (exists $XSConfig{canned_gperf}) { #fix up PP Config to look like XS Config
     my $k = "config_arg".$_;
     $Config_copy{$k} = '' unless exists $Config{$k};
   }
-  for my $k (qw(bin_ELF bootstrap_charset canned_gperf ccstdflags ccwarnflags
+  my @cannedkeys =
+            qw( bin_ELF bootstrap_charset canned_gperf ccstdflags ccwarnflags
                 charsize config_argc config_args d_re_comp d_regcmp git_ancestor
                 git_remote_branch git_unpushed hostgenerate hostosname hostperl
                 incpth installhtmldir installhtmlhelpdir ld_can_script
                 libdb_needs_pthread mad malloc_cflags sysroot targetdir
                 targetenv targethost targetmkdir targetport
-                useversionedarchname)) {
+                useversionedarchname);
+  unless($in_core) { #cperl doesn't need these, CPAN does
+      push @cannedkeys , qw(
+d_acosh d_asinh d_atanh d_backtrace     d_builtin_arith_overflow        d_cbrt
+d_copysign      d_dladdr        d_erf   d_erfc  d_exp2  d_expm1 d_fdim
+d_fegetround    d_fma   d_fmax  d_fmin  d_fp_classify   d_fp_classl
+d_fpgetround    d_fs_data_s     d_fstatfs       d_fstatvfs      d_getfsstat
+d_getmnt        d_getmntent     d_hasmntopt     d_hypot d_ilogb d_ip_mreq
+d_ip_mreq_source        d_ipv6_mreq_source      d_isfinitel     d_isinfl
+d_isless        d_isnormal      d_j0    d_j0l   d_lc_monetary_2008
+d_ldexpl        d_lgamma        d_lgamma_r      d_libname_unique
+d_llrint        d_llrintl       d_llround       d_llroundl      d_log1p d_log2
+d_logb  d_lrint d_lrintl        d_lround        d_lroundl       d_nan
+d_nearbyint     d_nextafter     d_nexttoward    d_ptrdiff_t     d_regcomp
+d_remainder     d_remquo        d_rint  d_round d_scalbn        d_sfio  d_stat
+d_statfs_f_flags        d_statfs_s      d_statvfs       d_tgamma        d_trunc
+d_truncl        d_ustat d_vms_case_sensitive_symbols    d_wcscmp
+d_wcsxfrm       defvoidused     dl_so_eq_ext    doubleinfbytes  doublekind
+doublemantbits  doublenanbytes  git_commit_date hash_func       i_bfd   i_dld
+i_execinfo      i_fenv  i_mntent        i_quadmath      i_sfio  i_stdint
+i_sysmount      i_sysstatfs     i_sysstatvfs    i_sysvfs        i_ustat
+ieeefp_h        longdblinfbytes longdblkind     longdblmantbits longdblnanbytes
+madlyh  madlyobj        madlysrc        nvmantbits      targetsh
+usecbacktrace   usecperl        usequadmath     usesfio voidflags
+      );
+  }
+  for my $k (@cannedkeys) {
     $Config_copy{$k} = '' unless exists $Config{$k};
   }
   is (scalar keys %Config_copy, $klenXS, 'same adjusted key count');
@@ -85,7 +114,9 @@ if (exists $XSConfig{canned_gperf}) { #fix up PP Config to look like XS Config
 is_deeply ($copy ? \%Config_copy : \%Config, \%XSConfig, "cmp PP to XS hashes");
 
 if (!Test::More->builder->is_passing()) {
-  if (index(`diff --help`, 'Usage: diff') != -1) {
+  my $diffout = `diff --help`;
+  if (index($diffout, 'Usage: diff') != -1 #GNU
+      || index($diffout, 'usage: diff') != -1) { #Solaris
     open my $f, '>','xscfg.txt';
     print $f Data::Dumper::Dumper({%XSConfig});
     close $f;
