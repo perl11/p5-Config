@@ -80,27 +80,28 @@ if (exists $XSConfig{canned_gperf}) { #fix up PP Config to look like XS Config
                 useversionedarchname);
   unless($in_core) { #cperl doesn't need these, CPAN does
       push @cannedkeys , qw(
-d_acosh d_asinh d_atanh d_backtrace     d_builtin_arith_overflow        d_cbrt
-d_copysign      d_dladdr        d_erf   d_erfc  d_exp2  d_expm1 d_fdim
-d_fegetround    d_fma   d_fmax  d_fmin  d_fp_classify   d_fp_classl
-d_fpgetround    d_fs_data_s     d_fstatfs       d_fstatvfs      d_getfsstat
-d_getmnt        d_getmntent     d_hasmntopt     d_hypot d_ilogb d_ip_mreq
-d_ip_mreq_source        d_ipv6_mreq_source      d_isfinitel     d_isinfl
-d_isless        d_isnormal      d_j0    d_j0l   d_lc_monetary_2008
-d_ldexpl        d_lgamma        d_lgamma_r      d_libname_unique
-d_llrint        d_llrintl       d_llround       d_llroundl      d_log1p d_log2
-d_logb  d_lrint d_lrintl        d_lround        d_lroundl       d_nan
-d_nearbyint     d_nextafter     d_nexttoward    d_ptrdiff_t     d_regcomp
-d_remainder     d_remquo        d_rint  d_round d_scalbn        d_sfio  d_stat
-d_statfs_f_flags        d_statfs_s      d_statvfs       d_tgamma        d_trunc
-d_truncl        d_ustat d_vms_case_sensitive_symbols    d_wcscmp
-d_wcsxfrm       defvoidused     dl_so_eq_ext    doubleinfbytes  doublekind
-doublemantbits  doublenanbytes  git_commit_date hash_func       i_bfd   i_dld
-i_execinfo      i_fenv  i_mntent        i_quadmath      i_sfio  i_stdint
-i_sysmount      i_sysstatfs     i_sysstatvfs    i_sysvfs        i_ustat
-ieeefp_h        longdblinfbytes longdblkind     longdblmantbits longdblnanbytes
-madlyh  madlyobj        madlysrc        nvmantbits      targetsh
-usecbacktrace   usecperl        usequadmath     usesfio voidflags
+d_acosh d_asinh d_atanh d_backtrace d_builtin_arith_overflow    d_cbrt
+d_copysign  d_dladdr    d_erf   d_erfc  d_exp2  d_expm1 d_fdim  d_fegetround
+d_fma   d_fmax  d_fmin  d_fp_classify   d_fp_classl d_fpgetround    d_fs_data_s
+d_fstatfs   d_fstatvfs  d_getfsstat d_getmnt    d_getmntent d_hasmntopt d_hypot
+d_ilogb d_ip_mreq   d_ip_mreq_source    d_ipv6_mreq d_ipv6_mreq_source
+d_isblank   d_isfinitel d_isinfl    d_isless    d_isnormal  d_j0    d_j0l
+d_lc_monetary_2008  d_ldexpl    d_lgamma    d_lgamma_r  d_libname_unique
+d_llrint    d_llrintl   d_llround   d_llroundl  d_log1p d_log2  d_logb  d_lrint
+d_lrintl    d_lround    d_lroundl   d_nan   d_nearbyint d_nextafter
+d_nexttoward    d_prctl d_prctl_set_name    d_ptrdiff_t d_regcomp   d_remainder
+d_remquo    d_rint  d_round d_scalbn    d_sfio  d_sin6_scope_id d_sockaddr_in6
+d_sockaddr_sa_len   d_stat  d_statfs_f_flags    d_statfs_s  d_static_inline
+d_statvfs   d_tgamma    d_trunc d_truncl    d_ustat
+d_vms_case_sensitive_symbols    d_wcscmp    d_wcsxfrm   defvoidused
+dl_so_eq_ext    dlltool doubleinfbytes  doublekind  doublemantbits
+doublenanbytes  found_libucb    git_commit_date hash_func   i_bfd   i_dld
+i_execinfo  i_fenv  i_mntent    i_quadmath  i_sfio  i_stdbool   i_stdint
+i_sysmount  i_sysstatfs i_sysstatvfs    i_sysvfs    i_ustat ieeefp_h
+longdblinfbytes longdblkind longdblmantbits longdblnanbytes madlyh  madlyobj
+madlysrc    nvmantbits  perl_static_inline  st_ino_sign st_ino_size targetsh
+usecbacktrace   usecperl    usekernprocpathname usensgetexecutablepath  usesfio
+voidflags
       );
   }
   for my $k (@cannedkeys) {
@@ -114,7 +115,9 @@ usecbacktrace   usecperl        usequadmath     usesfio voidflags
 is_deeply ($copy ? \%Config_copy : \%Config, \%XSConfig, "cmp PP to XS hashes");
 
 if (!Test::More->builder->is_passing()) {
-  my $diffout = `diff --help`;
+# 2>&1 because output string not captured on solaris
+# http://cpantesters.org/cpan/report/fa1f8f72-a7c8-11e5-9426-d789aef69d38
+  my $diffout = `diff --help 2>&1`;
   if (index($diffout, 'Usage: diff') != -1 #GNU
       || index($diffout, 'usage: diff') != -1) { #Solaris
     open my $f, '>','xscfg.txt';

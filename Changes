@@ -1,5 +1,11 @@
 Revision history for XSConfig
 
+6.00_03 Mon, Dec 21, 2015  1:13:15 PM
+        -minimum Perl version added for Kwalitee, 5.6 is tested as a no-go
+        -more common keys for CPAN Testers
+        -more diagnostics for CPAN Testers
+        -Solaris diff fix
+
 6.00_02 Mon, Dec 21, 2015  2:40:53 AM
         -more diagnostics for CPAN Testers
 
