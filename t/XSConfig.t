@@ -103,7 +103,7 @@ i_sysmount  i_sysstatfs i_sysstatvfs    i_sysvfs    i_ustat ieeefp_h
 longdblinfbytes longdblkind longdblmantbits longdblnanbytes madlyh  madlyobj
 madlysrc    nvmantbits  perl_static_inline  st_ino_sign st_ino_size targetsh
 usecbacktrace   usecperl    usekernprocpathname usensgetexecutablepath
-usequadmath usesfio voidflags
+usequadmath usesfio vaproto voidflags
       );
   }
   for my $k (@cannedkeys) {

@@ -1442,13 +1442,15 @@ PPCODE:
          goto return_undef;
      if (c->type == T_INT) {
          IV iv;
+#if PTRSIZE != IVSIZE
          if(c->len)
-#ifdef HAS_STRTOL
+#  ifdef HAS_STRTOL
               iv = strtol(c->value,NULL,10);
-#else
+#  else
               iv = atoi(c->value);
-#endif
+#  endif
          else
+#endif
 #if PTRSIZE == 8
               iv = (I64TYPE)c->value;
 #else
