@@ -32,7 +32,8 @@ WriteMakefile(
     'PM' => {
         'Config.pm'      => '$(INST_LIBDIR)/Config.pm',
         ($in_core ? () : ('Config_mini.pl'     => '$(INST_LIBDIR)/Config_mini.pl',
-                          'Config_xs_heavy.pl' => '$(INST_LIBDIR)/Config_xs_heavy.pl')),
+                          'Config_xs_heavy.pl' => '$(INST_LIBDIR)/Config_xs_heavy.pl',
+                          'XSConfig.pod'       => '$(INST_LIBDIR)/XSConfig.pod')),
     },
     #XS Config can not be loaded by P5P DynaLoader, only by XSLoader WITHOUT
     #XSLoader passing the "complicated" loading scenario to DynaLoader.

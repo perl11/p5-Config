@@ -1,0 +1,44 @@
+=head1 NAME
+
+XSConfig - Fast XS drop-in replacement for Config.pm with perfect hashing.
+
+=head1 VERSION
+
+Version 6.00_05
+
+=head1 SYNOPSIS
+
+The Config.pm included by default with Perl is pure Perl.  Nearly all Perl apps
+will load Config.pm.  For a number of reasons, of speed and memory space,
+reimplement the P5P shipped Config.pm as an XS library, shareable between
+processes as read-only memory, and with a hash that is better optimized than
+Perl hashes, courtesy of gperf tool which generates collision-free perfect
+hashes.
+
+This module is a drop-in replacement for Config.pm. All code that does
+
+    use Config;
+
+will use the XS implementation after installing this module.  To revert to the
+original pure perl Config.pm, go and delete the following 3 files that will be
+next to each other in /site, Config.pm, Config_mini.pl, Config_xs_heavy.pl, and
+the Config shared library in /auto, after deleting the /site files, the original
+pure perl Config.pm in /lib will be loaded.
+
+IT IS HIGHLY RECOMMENDED THAT YOU HAVE GPERF TOOL INSTALLED AND RUNNABLE FROM
+YOUR PATH BEFORE INSTALLING XS CONFIG.
+
+=head1 AUTHOR
+
+Daniel Dragan C<< <BULKDD at cpan.org> >>
+Reini Urban C<< <rurban at cpanel.net> >>
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright (C) 2015, Daniel Dragan
+Copyright (C) 2015, cPanel Inc
+ 
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut

@@ -1,5 +1,10 @@
 Revision history for XSConfig
 
+6.00_06 Tue, Dec 22, 2015 12:06:04 PM
+        -more diagnostics for CPAN Testers, specifically
+         "Empty input keyword is not allowed."
+        -added XSConfig.pod (p5-Config PR #1)
+
 6.00_05 Tue, Dec 22, 2015  4:16:08 AM
         -more common keys for CPAN Testers
         -more diagnostics for CPAN Testers

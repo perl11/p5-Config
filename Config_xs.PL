@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.00_05';
+$VERSION = '6.00_06';
 my $in_core;
 
 BEGIN {
@@ -73,6 +73,7 @@ while (<$in>) { # as in config.sh
     last if $_ eq '!END!';
     next if /^perl_(version|subversion|revision)=/;
     my ($k,$v) = split(/=/,$_,2);
+    die 'Found empty string as key name Config_heavy.pl LINE|||'.$_.'|||' if $k eq '';
     $v = substr($v, 1, length($v)-2);#strip start/end quotes, ' or "
     #$v =~ s/\\/\\\\/g;
     $h{$k} = $v;
@@ -98,6 +99,7 @@ if ($in_core || -e $git) {
         chomp;
         last if $_ eq 'ENDOFGIT';
         my ($k,$v) = split(/=/,$_,2);
+        die 'Found empty string as key name Config_git.pl LINE|||'.$_.'|||' if $k eq '';
         $v = substr($v, 1, length($v)-2);#strip start/end quotes, ' or "
         $h{$k} = $v;
     }

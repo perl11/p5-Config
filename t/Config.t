@@ -5,8 +5,10 @@ BEGIN {
 #diag http://cpantesters.org/cpan/report/776d6d18-a7ac-11e5-af33-cae9e0bfc7aa
     #if ($@) {
         require Data::Dumper;
+        require Cwd;
         warn Data::Dumper::Dumper(\%INC);
         warn Data::Dumper::Dumper(\@INC);
+        warn 'CWD is |||'.Cwd::getcwd().'|||';
     #}
 
     plan ('no_plan');
