@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.00_03';
+$VERSION = '6.00_04';
 my $in_core;
 
 BEGIN {
@@ -119,7 +119,6 @@ unless ($no_gperf) {
             require Data::Dumper;
             print Data::Dumper::Dumper(\%ENV);
             print `gperf -v`;
-            print `gperf -h`;
         }
     } else {
         local $/;
@@ -168,8 +167,8 @@ i_execinfo  i_fenv  i_mntent    i_quadmath  i_sfio  i_stdbool   i_stdint
 i_sysmount  i_sysstatfs i_sysstatvfs    i_sysvfs    i_ustat ieeefp_h
 longdblinfbytes longdblkind longdblmantbits longdblnanbytes madlyh  madlyobj
 madlysrc    nvmantbits  perl_static_inline  st_ino_sign st_ino_size targetsh
-usecbacktrace   usecperl    usekernprocpathname usensgetexecutablepath  usesfio
-voidflags
+usecbacktrace   usecperl    usekernprocpathname usensgetexecutablepath
+usequadmath usesfio voidflags
         );
     }
 
@@ -276,10 +275,20 @@ sub gen_gperf_Config {
 
     if (close_and_rename($xs) or $force or -M $xsin < -M $xsout or !(-f $xsout))
     {
+        die "file $xsin is zero bytes long" if -s $xsin == 0;
         my $run = "gperf --output-file=$xsout $xsin";
 #diag http://cpantesters.org/cpan/report/4f74a142-a7ce-11e5-9426-d789aef69d38
         print STDERR 'will run |||'.$run."|||\n";
         system($run);
+        if (-s $xsout == 0) {
+            warn "$xsout is zero bytes long\nnow dumping $xsin\n\n***************************\n";
+            open(my $xsinfh, "<", $xsin) or die $!;
+            local $/; # enable localized slurp mode
+            my $xsindata = <$xsinfh>;
+            close $xsinfh;
+            warn $xsindata;
+            warn "\n***************************\n";
+        }
         post_process_gperf($xsout);
     }
 }

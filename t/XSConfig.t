@@ -59,6 +59,8 @@ my $klenXS = scalar(keys %XSConfig);
 my $copy = 0;
 my %Config_copy;
 if (exists $XSConfig{canned_gperf}) { #fix up PP Config to look like XS Config
+  #to see in CPAN Testers reports if the builder had gperf or not
+  warn "This XS Config was built with the canned XS file\n";
   $copy = 1;
   for (keys %Config) {
     $Config_copy{$_} = $Config{$_};
@@ -100,8 +102,8 @@ i_execinfo  i_fenv  i_mntent    i_quadmath  i_sfio  i_stdbool   i_stdint
 i_sysmount  i_sysstatfs i_sysstatvfs    i_sysvfs    i_ustat ieeefp_h
 longdblinfbytes longdblkind longdblmantbits longdblnanbytes madlyh  madlyobj
 madlysrc    nvmantbits  perl_static_inline  st_ino_sign st_ino_size targetsh
-usecbacktrace   usecperl    usekernprocpathname usensgetexecutablepath  usesfio
-voidflags
+usecbacktrace   usecperl    usekernprocpathname usensgetexecutablepath
+usequadmath usesfio voidflags
       );
   }
   for my $k (@cannedkeys) {
