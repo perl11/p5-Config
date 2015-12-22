@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.00_06';
+$VERSION = '6.00_07';
 my $in_core;
 
 BEGIN {
@@ -98,6 +98,10 @@ if ($in_core || -e $git) {
     while (<$in>) {
         chomp;
         last if $_ eq 'ENDOFGIT';
+        #some Config_git.pl that were generated, probably without a git binary
+        #available but with a .git dir in perl source tree
+        #contain a blank line before ENDOFGIT line
+        next unless length $_;
         my ($k,$v) = split(/=/,$_,2);
         die 'Found empty string as key name Config_git.pl LINE|||'.$_.'|||' if $k eq '';
         $v = substr($v, 1, length($v)-2);#strip start/end quotes, ' or "

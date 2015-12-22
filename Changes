@@ -1,5 +1,9 @@
 Revision history for XSConfig
 
+6.00_07 Tue, Dec 22, 2015  4:15:30 PM
+        -fix attempt for "Empty input keyword is not allowed."
+        -dont distribute genkeys.PL on CPAN, it is a dev tool
+
 6.00_06 Tue, Dec 22, 2015 12:06:04 PM
         -more diagnostics for CPAN Testers, specifically
          "Empty input keyword is not allowed."

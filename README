@@ -24,6 +24,11 @@ next to each other in /site, Config.pm, Config_mini.pl, Config_xs_heavy.pl, and
 the Config shared library in /auto, after deleting the /site files, the original
 pure perl Config.pm in /lib will be loaded.
 
+Since XS Config is a compiled C shared library, it can not be edited with a text
+editor after it is built.  To change the values in the XS Config module,
+edit the pure perl Config_heavy.pl file with a text editor and rebuild XS
+Config.
+
 IT IS HIGHLY RECOMMENDED THAT YOU HAVE GPERF TOOL INSTALLED AND RUNNABLE FROM
 YOUR PATH BEFORE INSTALLING XS CONFIG.
 
