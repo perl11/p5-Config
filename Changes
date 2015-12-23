@@ -1,5 +1,9 @@
 Revision history for XSConfig
 
+6.00_09 Tue, Dec 22, 2015 11:35:08 PM
+        -perl 5.8.8 and older XS fix
+        -more common keys for CPAN Testers
+
 6.00_08 Tue, Dec 22, 2015  6:31:58 PM
         -more common keys for HPUX
         -refactor a tiny bit of code for smaller tarball

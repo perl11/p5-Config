@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.00_08';
+$VERSION = '6.00_09';
 my $in_core;
 
 BEGIN {
@@ -71,7 +71,7 @@ while (<$in>) {
 while (<$in>) { # as in config.sh
     chomp;
     last if $_ eq '!END!';
-    next if /^perl_(version|subversion|revision)=/;
+    next if $in_core && /^perl_(version|subversion|revision)=/;
     my ($k,$v) = split(/=/,$_,2);
     die 'Found empty string as key name Config_heavy.pl LINE|||'.$_.'|||' if $k eq '';
     $v = substr($v, 1, length($v)-2);#strip start/end quotes, ' or "
@@ -172,10 +172,11 @@ doublenanbytes  found_libucb    git_commit_date hash_func   i_bfd   i_dld
 i_execinfo  i_fenv  i_mntent    i_quadmath  i_sfio  i_stdbool   i_stdint
 i_sysmount  i_sysstatfs i_sysstatvfs    i_sysvfs    i_ustat ieeefp_h
 longdblinfbytes longdblkind longdblmantbits longdblnanbytes madlyh  madlyobj
-madlysrc    nvmantbits  op_cflags   perl_static_inline  pthread_h_first
-regexec_cflags  st_ino_sign st_ino_size targetsh    toke_cflags usecbacktrace
-usecperl    usekernprocpathname usensgetexecutablepath  usequadmath usesfio
-vaproto voidflags
+madlysrc    nvmantbits  op_cflags   perl_revision   perl_static_inline
+perl_subversion perl_version    pthread_h_first regexec_cflags  st_ino_sign
+st_ino_size targetsh    toke_cflags usecbacktrace   usecperl
+usekernprocpathname usensgetexecutablepath  usequadmath usesfio vaproto
+voidflags
         );
     }
 

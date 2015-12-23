@@ -45,7 +45,14 @@ API function to access the generated hash.
 #include "perl.h"
 #include "XSUB.h"
 
-/* back compat with old perls, none of this is in ppport.h */
+/* back compat with old perls */
+#define _dpppDEC2BCD(dec) ((((dec)/100)<<8)|((((dec)%100)/10)<<4)|((dec)%10))
+#define PERL_BCDVERSION ((_dpppDEC2BCD(PERL_REVISION)<<24)|(_dpppDEC2BCD(PERL_VERSION)<<12)|_dpppDEC2BCD(PERL_SUBVERSION))
+#if (PERL_BCDVERSION < 0x5009003) && ! defined(SvPVX_const)
+#  define SvPVX_const(sv) ((const char*) (0 + SvPVX(sv)))
+#endif
+
+/* none of this is in ppport.h */
 #ifndef SvREFCNT_dec_NN
 #  define SvREFCNT_dec_NN(sv) SvREFCNT_dec (sv)
 #endif
@@ -1141,7 +1148,10 @@ path_sep,		T_INV,	0,"@@path_sep@@"
 perl,			T_INV,	0,"@@perl@@"
 perl5,			T_INV,	0,"@@perl5@@"
 perl_patchlevel,	T_INV,	0,"@@perl_patchlevel@@"
+perl_revision,		T_INV,	0,"@@perl_revision@@"
 perl_static_inline,	T_INV,	0,"@@perl_static_inline@@"
+perl_subversion,	T_INV,	0,"@@perl_subversion@@"
+perl_version,		T_INV,	0,"@@perl_version@@"
 perladmin,		T_INV,	0,"@@perladmin@@"
 perllibs,		T_INV,	0,"@@perllibs@@"
 perlpath,		T_INV,	0,"@@perlpath@@"
