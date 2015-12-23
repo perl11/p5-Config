@@ -52,6 +52,18 @@ API function to access the generated hash.
 #  define SvPVX_const(sv) ((const char*) (0 + SvPVX(sv)))
 #endif
 
+#ifndef newSVpvn_flags
+#  define newSVpvn_flags(a,b,c) my_newSVpvn_flags(aTHX_ a,b,c)
+#  define Perl_newSVpvn_flags my_newSVpvn_flags
+static SV *
+my_newSVpvn_flags(pTHX_ const char *s, STRLEN len, U32 flags)
+{
+  SV *sv = newSVpvn(s, len);
+  SvFLAGS(sv) |= (flags & SVf_UTF8);
+  return (flags & SVs_TEMP) ? sv_2mortal(sv) : sv;
+}
+#endif
+
 /* none of this is in ppport.h */
 #ifndef SvREFCNT_dec_NN
 #  define SvREFCNT_dec_NN(sv) SvREFCNT_dec (sv)

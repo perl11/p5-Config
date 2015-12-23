@@ -15,9 +15,9 @@ WriteMakefile(
             repository => 'https://github.com/perl11/p5-Config',
         },
     },
-#Config_heavy.pl didn't exist before 5.8.6, it was part of a huge Config.pm
+#Config_heavy.pl didn't exist before 5.8.7, it was part of a huge Config.pm
 #not worth the time to modify Config_xs.PL and Config_xs_heavy.pl.PL
-    'MIN_PERL_VERSION'  => '5.8.6',
+    'MIN_PERL_VERSION'  => '5.8.7',
     'VERSION_FROM'	=> 'Config.pm',
     'PL_FILES'		=> {'Config_xs.PL' => 'Config.xs',
                             ($in_core ?
