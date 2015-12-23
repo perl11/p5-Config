@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.02';
+$VERSION = '6.03';
 my $in_core;
 
 BEGIN {
@@ -73,7 +73,6 @@ while (<$in>) { # as in config.sh
     last if $_ eq '!END!';
     next if $in_core && /^perl_(version|subversion|revision)=/;
     my ($k,$v) = split(/=/,$_,2);
-    die 'Found empty string as key name Config_heavy.pl LINE|||'.$_.'|||' if $k eq '';
     $v = substr($v, 1, length($v)-2);#strip start/end quotes, ' or "
     #$v =~ s/\\/\\\\/g;
     $h{$k} = $v;
@@ -103,7 +102,6 @@ if ($in_core || -e $git) {
         #contain a blank line before ENDOFGIT line
         next unless length $_;
         my ($k,$v) = split(/=/,$_,2);
-        die 'Found empty string as key name Config_git.pl LINE|||'.$_.'|||' if $k eq '';
         $v = substr($v, 1, length($v)-2);#strip start/end quotes, ' or "
         $h{$k} = $v;
     }
@@ -119,14 +117,7 @@ unless ($no_gperf) {
     }
     unlink $xsout."_tmp";
     print STDERR "gperf ",$gperf_ok ? "works ok\n" : "does not work\n";
-    if ($gperf_ok) {
-#diag http://cpantesters.org/cpan/report/e334bb42-a77e-11e5-9410-f17aaf845ad4
-        unless ($in_core) {
-            require Data::Dumper;
-            print Data::Dumper::Dumper(\%ENV);
-            print `gperf -v`;
-        }
-    } else {
+    unless($gperf_ok) {
         local $/;
         my $msg = <DATA>;
         eval $msg;
@@ -290,20 +281,8 @@ sub gen_gperf_Config {
 
     if (close_and_rename($xs) or $force or -M $xsin < -M $xsout or !(-f $xsout))
     {
-        die "file $xsin is zero bytes long" if -s $xsin == 0;
-        my $run = "gperf --output-file=$xsout $xsin";
-#diag http://cpantesters.org/cpan/report/4f74a142-a7ce-11e5-9426-d789aef69d38
-        print STDERR 'will run |||'.$run."|||\n";
-        system($run);
-        if (-s $xsout == 0) {
-            warn "$xsout is zero bytes long\nnow dumping $xsin\n\n***************************\n";
-            open(my $xsinfh, "<", $xsin) or die $!;
-            local $/; # enable localized slurp mode
-            my $xsindata = <$xsinfh>;
-            close $xsinfh;
-            warn $xsindata;
-            warn "\n***************************\n";
-        }
+        print STDERR "gperf $xsout\n";
+        system("gperf --output-file=$xsout $xsin");
         post_process_gperf($xsout);
     }
 }

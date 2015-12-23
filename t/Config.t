@@ -1,32 +1,7 @@
 #!./perl -w
 
 BEGIN {
-    sub searchdirs {
-        my($fn, $fullfn) = shift;
-        foreach my $d ( @{$_[0]} ) {
-            my $tmppath = $d.'/'.$fn;
-            if (-s $tmppath) {
-                $fullfn = $tmppath;
-                last;
-            }
-        }
-        return $fullfn;
-    }
-    my ($x, $r, $e);
-    $r = eval { require "test.pl"; };
-    $x = $@;
-    $e = $!;
-#diag http://cpantesters.org/cpan/report/776d6d18-a7ac-11e5-af33-cae9e0bfc7aa
-    #if ($@) {
-        require Data::Dumper;
-        require Cwd;
-        warn "test.pl load ret $r, excpt $x, err $e";
-        warn Data::Dumper::Dumper(\%INC);
-        warn Data::Dumper::Dumper(\@INC);
-        warn 'CWD is |||'.Cwd::getcwd().'|||';
-    #}
-    my $abstestpl = searchdirs('test.pl', \@INC);
-    warn 'manual test.pl search found abs path '.$abstestpl;
+    require "xsc_test.pl";
 
     plan ('no_plan');
 

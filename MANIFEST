@@ -7,11 +7,11 @@ Config_xs.PL
 Config_xs_heavy.pl.PL
 Dummy.c
 Makefile.PL
-MANIFEST
+MANIFEST			This list of files
 README
 regen/regen_lib.pl
 t/Config.t
 t/XSConfig.t
-test.pl
 typemap
+xsc_test.pl
 XSConfig.pod

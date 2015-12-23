@@ -1,5 +1,9 @@
 Revision history for XSConfig
 
+6.03    Wed, Dec 23, 2015  5:22:57 PM
+        -wrong test.pl used in t/Config.t fixed
+        -CPAN Testers diagnostics removed
+
 6.02    *UNSTABLE* Wed, Dec 23, 2015 11:57:11 AM
         -perl 5.8.7 XS fix
         -minimum perl version is now 5.8.7, 5.8.6 doesn't have Config_heavy.pl

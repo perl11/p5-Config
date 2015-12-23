@@ -129,7 +129,7 @@ if (!Test::More->builder->is_passing()) {
 # 2>&1 because output string not captured on solaris
 # http://cpantesters.org/cpan/report/fa1f8f72-a7c8-11e5-9426-d789aef69d38
   my $diffout = `diff --help 2>&1`;
-  if (1 || index($diffout, 'Usage: diff') != -1 #GNU
+  if (index($diffout, 'Usage: diff') != -1 #GNU
       || index($diffout, 'usage: diff') != -1) { #Solaris
     open my $f, '>','xscfg.txt';
     print $f Data::Dumper::Dumper({%XSConfig});
@@ -141,8 +141,8 @@ if (!Test::More->builder->is_passing()) {
               : Data::Dumper::Dumper({%Config}));
     close $g;
     system('diff -U 0 ppcfg.txt xscfg.txt > cfg.diff');
-    #unlink('xscfg.txt');
-    #unlink('ppcfg.txt');
+    unlink('xscfg.txt');
+    unlink('ppcfg.txt');
     if (-s 'cfg.diff') {
       open my $h , '<','cfg.diff';
       local $/;
