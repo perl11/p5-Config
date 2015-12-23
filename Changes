@@ -1,5 +1,9 @@
 Revision history for XSConfig
 
+6.01_01 Wed, Dec 23, 2015  3:35:52 AM
+        -more common keys for Strawberry Perl 5.8.9 without gperf
+        -more diagnostics for CPAN Testers (test.pl failures)
+
 6.01    *UNSTABLE* Wed, Dec 23, 2015  2:23:43 AM
         -change to non-alpha because many CPAN Testers ignore dev releases
         -more diagnostics for CPAN Testers

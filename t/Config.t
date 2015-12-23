@@ -1,6 +1,17 @@
 #!./perl -w
 
 BEGIN {
+    sub searchdirs {
+        my($fn, $fullfn) = shift;
+        foreach my $d ( @{$_[0]} ) {
+            my $tmppath = $d.'/'.$fn;
+            if (-s $tmppath) {
+                $fullfn = $tmppath;
+                last;
+            }
+        }
+        return $fullfn;
+    }
     my ($x, $r, $e);
     $r = eval { require "test.pl"; };
     $x = $@;
@@ -14,6 +25,8 @@ BEGIN {
         warn Data::Dumper::Dumper(\@INC);
         warn 'CWD is |||'.Cwd::getcwd().'|||';
     #}
+    my $abstestpl = searchdirs('test.pl', \@INC);
+    warn 'manual test.pl search found abs path '.$abstestpl;
 
     plan ('no_plan');
 
