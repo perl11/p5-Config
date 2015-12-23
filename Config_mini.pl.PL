@@ -20,7 +20,6 @@ if (! $mini) { #create it
         . "not found, broken XS Config install?"
         if index($cfgdata, 'Config_mini.pl') != -1;
     @ARGV = ($INC{'Config.pm'}, 'Config_mini.pl');
-
 } else {
     #completly redundant but copy it to make mkf happy
     @ARGV = ($mini, 'Config_mini.pl');

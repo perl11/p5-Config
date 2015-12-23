@@ -788,6 +788,7 @@ dl_so_eq_ext,		T_INV,	0,"@@dl_so_eq_ext@@"
 dlext,			T_INV,	0,"@@dlext@@"
 dlltool,		T_INV,	0,"@@dlltool@@"
 dlsrc,			T_INV,	0,"@@dlsrc@@"
+doop_cflags,		T_INV,	0,"@@doop_cflags@@"
 doubleinfbytes,		T_INV,	0,"@@doubleinfbytes@@"
 doublekind,		T_INV,	0,"@@doublekind@@"
 doublemantbits,		T_INV,	0,"@@doublemantbits@@"
@@ -1126,6 +1127,7 @@ nvtype,			T_INV,	0,"@@nvtype@@"
 o_nonblock,		T_INV,	0,"@@o_nonblock@@"
 obj_ext,		T_INV,	0,"@@obj_ext@@"
 old_pthread_create_joinable,	T_INV,	0,"@@old_pthread_create_joinable@@"
+op_cflags,		T_INV,	0,"@@op_cflags@@"
 optimize,		T_INV,	0,"@@optimize@@"
 orderlib,		T_INV,	0,"@@orderlib@@"
 osname,			T_INV,	0,"@@osname@@"
@@ -1155,6 +1157,7 @@ privlib,		T_INV,	0,"@@privlib@@"
 privlibexp,		T_INV,	0,"@@privlibexp@@"
 procselfexe,		T_INV,	0,"@@procselfexe@@"
 prototype,		T_INV,	0,"@@prototype@@"
+pthread_h_first,	T_INV,	0,"@@pthread_h_first@@"
 ptrsize,		T_INV,	0,"@@ptrsize@@"
 quadkind,		T_INV,	0,"@@quadkind@@"
 quadtype,		T_INV,	0,"@@quadtype@@"
@@ -1166,6 +1169,7 @@ ranlib,			T_INV,	0,"@@ranlib@@"
 rd_nodata,		T_INV,	0,"@@rd_nodata@@"
 readdir64_r_proto,	T_INV,	0,"@@readdir64_r_proto@@"
 readdir_r_proto,	T_INV,	0,"@@readdir_r_proto@@"
+regexec_cflags,		T_INV,	0,"@@regexec_cflags@@"
 revision,		T_INV,	0,"@@revision@@"
 rm,			T_INV,	0,"@@rm@@"
 rm_try,			T_INV,	0,"@@rm_try@@"
@@ -1286,6 +1290,7 @@ timeincl,		T_INV,	0,"@@timeincl@@"
 timetype,		T_INV,	0,"@@timetype@@"
 tmpnam_r_proto,		T_INV,	0,"@@tmpnam_r_proto@@"
 to,			T_INV,	0,"@@to@@"
+toke_cflags,		T_INV,	0,"@@toke_cflags@@"
 touch,			T_INV,	0,"@@touch@@"
 tr,			T_INV,	0,"@@tr@@"
 trnl,			T_INV,	0,"@@trnl@@"
@@ -1385,12 +1390,12 @@ PROTOTYPES: DISABLE
 
 BOOT:
 {
-    STATIC_ASSERT_STMT(sizeof(stringpool_contents) <= 1 << 15);
+  STATIC_ASSERT_STMT(sizeof(stringpool_contents) <= 1 << 15);
 #ifndef USE_CPERL
-    {
-      MY_CXT_INIT;
-      MY_CXT.defineSV = newSVpvs("define");
-    }
+  {
+    MY_CXT_INIT;
+    MY_CXT.defineSV = newSVpvs("define");
+  }
 #endif
 }
 
@@ -1518,9 +1523,9 @@ PPCODE:
     const I32 gimme = GIMME_V;
     if(gimme != G_VOID) {
         EXTEND(sp,  gimme == G_SCALAR ? 1 : size);
-        if(gimme == G_SCALAR) {
+        if(gimme == G_SCALAR)
             mPUSHu(size); /* return just length */
-        } else {
+        else {
             int i = 0; /* optimized away */
             while (s < end) {
                 size_t l = strlen(s);

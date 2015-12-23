@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.00_07';
+$VERSION = '6.00_08';
 my $in_core;
 
 BEGIN {
@@ -167,14 +167,15 @@ d_remquo    d_rint  d_round d_scalbn    d_sfio  d_sin6_scope_id d_sockaddr_in6
 d_sockaddr_sa_len   d_stat  d_statfs_f_flags    d_statfs_s  d_static_inline
 d_statvfs   d_tgamma    d_trunc d_truncl    d_ustat
 d_vms_case_sensitive_symbols    d_wcscmp    d_wcsxfrm   defvoidused
-dl_so_eq_ext    dlltool doubleinfbytes  doublekind  doublemantbits
+dl_so_eq_ext    dlltool doop_cflags doubleinfbytes  doublekind  doublemantbits
 doublenanbytes  found_libucb    git_commit_date hash_func   i_bfd   i_dld
 i_execinfo  i_fenv  i_mntent    i_quadmath  i_sfio  i_stdbool   i_stdint
 i_sysmount  i_sysstatfs i_sysstatvfs    i_sysvfs    i_ustat ieeefp_h
 longdblinfbytes longdblkind longdblmantbits longdblnanbytes madlyh  madlyobj
-madlysrc    nvmantbits  perl_static_inline  st_ino_sign st_ino_size targetsh
-usecbacktrace   usecperl    usekernprocpathname usensgetexecutablepath
-usequadmath usesfio vaproto voidflags
+madlysrc    nvmantbits  op_cflags   perl_static_inline  pthread_h_first
+regexec_cflags  st_ino_sign st_ino_size targetsh    toke_cflags usecbacktrace
+usecperl    usekernprocpathname usensgetexecutablepath  usequadmath usesfio
+vaproto voidflags
         );
     }
 
