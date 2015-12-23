@@ -1,11 +1,15 @@
 #!./perl -w
 
 BEGIN {
-    eval { require "test.pl"; };
+    my ($x, $r, $e);
+    $r = eval { require "test.pl"; };
+    $x = $@;
+    $e = $!;
 #diag http://cpantesters.org/cpan/report/776d6d18-a7ac-11e5-af33-cae9e0bfc7aa
     #if ($@) {
         require Data::Dumper;
         require Cwd;
+        warn "test.pl load ret $r, excpt $x, err $e";
         warn Data::Dumper::Dumper(\%INC);
         warn Data::Dumper::Dumper(\@INC);
         warn 'CWD is |||'.Cwd::getcwd().'|||';

@@ -1,5 +1,9 @@
 Revision history for XSConfig
 
+6.01    *UNSTABLE* Wed, Dec 23, 2015  2:23:43 AM
+        -change to non-alpha because many CPAN Testers ignore dev releases
+        -more diagnostics for CPAN Testers
+
 6.00_09 Tue, Dec 22, 2015 11:35:08 PM
         -perl 5.8.8 and older XS fix
         -more common keys for CPAN Testers
