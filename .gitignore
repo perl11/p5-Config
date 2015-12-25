@@ -18,6 +18,7 @@ XSConfig-*
 ppcfg.txt
 xscfg.txt
 cfg.diff
+Config_def.old
 Config_pm_mtime
 Config_xs.out-new
 Config_xs.tmp.out

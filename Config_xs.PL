@@ -35,7 +35,10 @@ BEGIN {
     eval 'sub SPTR_MIN () { '.($ptrsize == 8 ? '-9223372036854775808' : '-2147483648').' } '.
     'sub SPTR_MAX () { '.($ptrsize == 8 ? '0x7FFFFFFFFFFFFFFF' : '0x7FFFFFFF').' } '.
     'sub IV_MIN () { '.($ivsize == 8 ? '-9223372036854775808' : '-2147483648').' } '.
-    'sub IV_MAX () { '.($ivsize == 8 ? '0x7FFFFFFFFFFFFFFF' : '0x7FFFFFFF').' } ';
+    'sub IV_MAX () { '.($ivsize == 8 ? '0x7FFFFFFFFFFFFFFF' : '0x7FFFFFFF').' } '.
+    'sub PTRSIZE () { '.$ptrsize.' } '.
+    'sub INLSIZE () { '.($ptrsize == 8 ? 13 : 5).' } '.
+    'sub BE () { '.((pack('N', 1) eq pack('L', 1))+0).'}';
 }
 use strict ;
 use Config ;
@@ -195,7 +198,7 @@ $h{byteorder} = $Config{byteorder};
 open $in, '<', $xsout  or die "Error reading '$xsout': $!";
 open $xs, '>', $xstarg or die "Error writing '$xstarg': $!";
 while (<$in>) {
-    if (/0,"@@(\w+)@@"/) {
+    if (/0,ALN64I"@@(\w+)@@"/) {
         my $k = $1;
         my $v = $h{$k};
         my $type = t_type($v);
@@ -203,40 +206,59 @@ while (<$in>) {
         if ($type eq 'T_STR') {
           if ($v eq 'define') {
             $l  = 0;
-            $qv = 'VDEFINE'
+            $qv = 'ALN64I VDEFINE'
           } elsif ($v eq 'undef') {
             $l  = 0;
-            $qv = 'VUNDEF'
+            $qv = 'ALN64I VUNDEF'
           } elsif ($v eq '') {
             $l  = 0;
-            $qv = 'VEMPTY'
-          } else { # a regular C string
+            $qv = 'ALN64I VEMPTY'
+          } else { # a string in ASCII/characters
+            my $lv = length($v);
             die "the value of Config key $k is over permitted length"
-              unless length($v) <= 1<<16;
-            $v =~ s/"/\\"/g;
-            # $v =~ s/\\!/!/;
-            # $v =~ s/\\ / /g;
-            $qv = $v;
-            $qv =~ s/(\\[^nrftacx"' ])/\\$1/g; # windows paths: \\ => \\\\
-            $qv =~ s/(\\[nrftacx ])/\\$1/g;  # \n => \\n, allowed escape chars
-            $qv = '"'.$qv.'"';
-            $l = $v =~ m/["'\\]/ ?
-            # don't calculate C-style length [cperl #61], let C do it for us
-            # and don't count the ending \0
-              'sizeof (' . $qv . ')-1'
-              : length($v)+0;
+              unless $lv <= 1<<15;
+            #an inline string stored directly in struct
+            if ($lv <= INLSIZE) {
+              my $h = unpack('H['.(INLSIZE*2).']', $v);
+              $h .= '0' x ((INLSIZE*2)-length($h)); #null pad out to end of struct
+              my @h = unpack("(A2)*", $h);
+              $l = 'LENPACKINL('.$lv.', 0x'.$h[0].')';
+              $qv = '(void*)' if PTRSIZE == 4;
+              if (BE) {
+                $qv = join('', $qv, '0x', @h[1,2,3,4]);
+                $qv = join('', $qv, ', (void*)0x', @h[5..12]) if (PTRSIZE == 8);
+              } else {
+                $qv = join('', $qv, '0x', @h[4,3,2,1]);
+                $qv = join('', $qv, ', (void*)0x', @h[12,11,10,9,8,7,6,5]) if (PTRSIZE == 8);
+              }
+            } else { #a regular C string
+              $v =~ s/"/\\"/g;
+              # $v =~ s/\\!/!/;
+              # $v =~ s/\\ / /g;
+              $qv = $v;
+              $qv =~ s/(\\[^nrftacx"' ])/\\$1/g; # windows paths: \\ => \\\\
+              $qv =~ s/(\\[nrftacx ])/\\$1/g;  # \n => \\n, allowed escape chars
+              $qv = '"'.$qv.'"';
+              $l = $v =~ m/["'\\]/ ?
+              # don't calculate C-style length [cperl #61], let C do it for us
+              # and don't count the ending \0
+                'sizeof (' . $qv . ')-1'
+                : length($v)+0;
+              $l = "($l) << 1" if ! BE;
+              $qv = 'ALN64I '.$qv;
+            }
           }
         } else { # $type eq 'T_INT'
           if ($v >= SPTR_MIN && $v <= SPTR_MAX) { #can fit in a ptr
             $l = 0;
-            $qv = '(char *)'.$v;
+            $qv = 'ALN64I (char *)'.$v;
           } else {#str in C, IV in perl, will be atoi-ed, 64b IV on 32b perl
             $l = length($v);
             $qv = '"'.$v.'"';
           }
         }
         my $new = $type.', '. $l . ', ' . $qv ;
-        s/T_\w+,	0,"\@\@$k\@\@"/$new/; # we have one line per key only
+        s/T_\w+,0,ALN64I"\@\@$k\@\@"/$new/; # we have one line per key only
         chomp;
         print $xs $_, " /* $k */\n";
     } else {
@@ -265,7 +287,7 @@ sub gen_gperf_Config {
     foreach my $k (sort { $a cmp $b } keys %$h) {
         my $tabs = "\t" x (3-((2+length($k))/8));
         #generate gperf syntax section of Config_xs.in
-        printf $xs "%s,\t%s%s,\t0,\"@@%s@@\"\n", $k, $tabs, 'T_INV', $k;
+        printf $xs "%s,\t%s%s,0,ALN64I\"@@%s@@\"\n", $k, $tabs, 'T_INV', $k;
     }
     print $xs "%%\n";
 
@@ -308,7 +330,7 @@ EOT
     s/^#?error "gperf generated tables don't work with this execution character set. Please report a bug to <bug-gnu-gperf\@gnu.org>."/#  error "gperf generated tables don't work with this non ISO-646 based character set."/m;
 
     # C++ requires full struct initializers
-    s/{-1},/{XCNAME_MAX, 1, 0, NULL},/g;
+    s/{-1},/{XSCNO},/g;
 
     # skip inline
     s/\Q#ifdef __GNUC__
@@ -336,7 +358,7 @@ __inline
     s/sizeof\(/sizeof (/g;
 
     # fixup U16
-    s/\(int\)\(long\)\&/(U16)(long)&/g;
+    s/\(int\)\(long\)\&/(U16)&/g;
     s/\Qregister int o = wordlist[key].name\E/register U16 o = wordlist[key].name/;
     s/\Qif (o >= 0)\E\n/if (o != XCNAME_MAX)\n/;
 

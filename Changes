@@ -1,5 +1,11 @@
 Revision history for XSConfig
 
+6.04    Fri, Dec 25, 2015 12:07:38 AM
+        -short strings in the Config table/DB are stored more efficiently
+         now, 1 KB reduction in disk size of XS Config's DLL on Win32 observed
+        -around 200KB of text was removed from the uncompressed size of XS
+         Config's source code
+
 6.03    Wed, Dec 23, 2015  5:22:57 PM
         -wrong test.pl used in t/Config.t fixed
         -CPAN Testers diagnostics removed
