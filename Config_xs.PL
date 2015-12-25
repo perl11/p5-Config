@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.04';
+$VERSION = '6.05';
 my $in_core;
 
 BEGIN {
@@ -147,10 +147,10 @@ if ($gperf_ok) {
                     useversionedarchname);
     unless ($in_core) { #cperl doesn't need these, CPAN does
         push @cannedkeys , qw(
-Mcc PERL_PATCHLEVEL charbits    d_acosh d_asctime64 d_asinh d_atanh
-d_attribute_deprecated  d_backtrace d_builtin_arith_overflow    d_cbrt
-d_copysign  d_ctime64   d_difftime64    d_dladdr    d_erf   d_erfc  d_exp2
-d_expm1 d_fdim  d_fegetround    d_fma   d_fmax  d_fmin  d_fp_classify
+Mcc PERL_PATCHLEVEL ccflags_nolargefiles    charbits    d_acosh d_asctime64
+d_asinh d_atanh d_attribute_deprecated  d_backtrace d_builtin_arith_overflow
+d_cbrt  d_copysign  d_ctime64   d_difftime64    d_dladdr    d_erf   d_erfc
+d_exp2  d_expm1 d_fdim  d_fegetround    d_fma   d_fmax  d_fmin  d_fp_classify
 d_fp_classl d_fpgetround    d_fs_data_s d_fstatfs   d_fstatvfs
 d_gdbm_ndbm_h_uses_prototypes   d_gdbmndbm_h_uses_prototypes    d_getaddrinfo
 d_getfsstat d_getmnt    d_getmntent d_getnameinfo   d_gmtime64  d_hasmntopt
@@ -171,13 +171,14 @@ git_commit_id   git_commit_id_title git_describe    git_uncommitted_changes
 hash_func   i_assert    i_bfd   i_dld   i_execinfo  i_fenv  i_gdbm_ndbm
 i_gdbmndbm  i_mallocmalloc  i_mntent    i_quadmath  i_sfio  i_stdbool
 i_stdint    i_sysmount  i_syspoll   i_sysstatfs i_sysstatvfs    i_sysvfs
-i_ustat ieeefp_h    longdblinfbytes longdblkind longdblmantbits longdblnanbytes
-madlyh  madlyobj    madlysrc    nv_overflows_integers_at    nvmantbits
-op_cflags   perl_revision   perl_static_inline  perl_subversion perl_version
-pthread_h_first regexec_cflags  rm_try  sGMTIME_max sGMTIME_min sLOCALTIME_max
-sLOCALTIME_min  st_ino_sign st_ino_size targetsh    toke_cflags usecbacktrace
-usecperl    usedevel    usedtrace   usekernprocpathname usensgetexecutablepath
-usequadmath usesfio vaproto voidflags
+i_ustat ieeefp_h    ldflags_nolargefiles    libs_nolargefiles
+libswanted_nolargefiles longdblinfbytes longdblkind longdblmantbits
+longdblnanbytes madlyh  madlyobj    madlysrc    nv_overflows_integers_at
+nvmantbits  op_cflags   perl_revision   perl_static_inline  perl_subversion
+perl_version    pthread_h_first regexec_cflags  rm_try  sGMTIME_max sGMTIME_min
+sLOCALTIME_max  sLOCALTIME_min  st_ino_sign st_ino_size targetsh    toke_cflags
+usecbacktrace   usecperl    usedevel    usedtrace   usekernprocpathname
+usensgetexecutablepath  usequadmath usesfio vaproto voidflags
         );
     }
 
