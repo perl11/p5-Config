@@ -5,6 +5,8 @@ Revision history for XSConfig
          now, 1 KB reduction in disk size of XS Config's DLL on Win32 observed
         -around 200KB of text was removed from the uncompressed size of XS
          Config's source code
+        -more common keys for CPAN Testers
+        -perl 5.8.7/5.8.8 XS fixes
 
 6.03    Wed, Dec 23, 2015  5:22:57 PM
         -wrong test.pl used in t/Config.t fixed

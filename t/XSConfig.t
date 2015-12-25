@@ -82,11 +82,11 @@ if (exists $XSConfig{canned_gperf}) { #fix up PP Config to look like XS Config
                 useversionedarchname);
   unless($in_core) { #cperl doesn't need these, CPAN does
       push @cannedkeys , qw(
-Mcc charbits    d_acosh d_asctime64 d_asinh d_atanh d_attribute_deprecated
-d_backtrace d_builtin_arith_overflow    d_cbrt  d_copysign  d_ctime64
-d_difftime64    d_dladdr    d_erf   d_erfc  d_exp2  d_expm1 d_fdim
-d_fegetround    d_fma   d_fmax  d_fmin  d_fp_classify   d_fp_classl
-d_fpgetround    d_fs_data_s d_fstatfs   d_fstatvfs
+Mcc PERL_PATCHLEVEL charbits    d_acosh d_asctime64 d_asinh d_atanh
+d_attribute_deprecated  d_backtrace d_builtin_arith_overflow    d_cbrt
+d_copysign  d_ctime64   d_difftime64    d_dladdr    d_erf   d_erfc  d_exp2
+d_expm1 d_fdim  d_fegetround    d_fma   d_fmax  d_fmin  d_fp_classify
+d_fp_classl d_fpgetround    d_fs_data_s d_fstatfs   d_fstatvfs
 d_gdbm_ndbm_h_uses_prototypes   d_gdbmndbm_h_uses_prototypes    d_getaddrinfo
 d_getfsstat d_getmnt    d_getmntent d_getnameinfo   d_gmtime64  d_hasmntopt
 d_hypot d_ilogb d_inetntop  d_inetpton  d_ip_mreq   d_ip_mreq_source

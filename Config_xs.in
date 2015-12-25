@@ -64,6 +64,10 @@ my_newSVpvn_flags(pTHX_ const char *s, STRLEN len, U32 flags)
 }
 #endif
 
+#ifndef newSVpvs
+#  define newSVpvs(str) newSVpvn(str "", sizeof(str) - 1)
+#endif
+
 /* none of this is in ppport.h */
 #ifndef SvREFCNT_dec_NN
 #  define SvREFCNT_dec_NN(sv) SvREFCNT_dec (sv)
