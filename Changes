@@ -1,5 +1,9 @@
 Revision history for XSConfig
 
+6.05_01 Not released on CPAN
+        -cperl improvements to core "make regen"
+         https://github.com/perl11/cperl/issues/99
+
 6.05    Fri, Dec 25, 2015  2:52:37 PM
         -more common keys for CPAN Testers
         -fix Config.t test fail when inside cperl (revision of fix in 6.03)
