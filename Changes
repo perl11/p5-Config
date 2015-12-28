@@ -1,5 +1,15 @@
 Revision history for XSConfig
 
+6.05_03 Sun, Dec 27, 2015 11:15:33 PM
+        -revert a Config_xs.out disk space saving tweak added in 6.04, with
+         newer GCCs this causes walls of warnings while building XS Config, ex.
+         Config_xs.in:1214:8: warning: cast from pointer to integer of
+         different size [-Wpointer-to-int-cast]
+         readdir_r_proto, T_INV,0,ALN64I"@@readdir_r_proto@@"
+                ^
+        -move key dlltool from CPAN-only to cperl (everywhere), this fixes an
+         XSConfig.t failure with Mingw GCC builds of cperl
+
 6.05_02 Sun, Dec 27, 2015  6:50:48 PM
         -more common keys for CPAN Testers
         -"Invalid type 'W' in unpack at xsc_test.pl line 299." fixed for Perl

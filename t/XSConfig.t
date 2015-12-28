@@ -72,14 +72,14 @@ if (exists $XSConfig{canned_gperf}) { #fix up PP Config to look like XS Config
     my $k = "config_arg".$_;
     $Config_copy{$k} = '' unless exists $Config{$k};
   }
-  my @cannedkeys =
-            qw( bin_ELF bootstrap_charset canned_gperf ccstdflags ccwarnflags
-                charsize config_argc config_args d_re_comp d_regcmp git_ancestor
-                git_remote_branch git_unpushed hostgenerate hostosname hostperl
-                incpth installhtmldir installhtmlhelpdir ld_can_script
-                libdb_needs_pthread mad malloc_cflags sysroot targetdir
-                targetenv targethost targetmkdir targetport
-                useversionedarchname);
+  my @cannedkeys = qw(
+bin_ELF bootstrap_charset   canned_gperf    ccstdflags  ccwarnflags charsize
+config_argc config_args d_re_comp   d_regcmp    dlltool git_ancestor
+git_remote_branch   git_unpushed    hostgenerate    hostosname  hostperl
+incpth  installhtmldir  installhtmlhelpdir  ld_can_script   libdb_needs_pthread
+mad malloc_cflags   sysroot targetdir   targetenv   targethost  targetmkdir
+targetport  useversionedarchname
+  );
   unless($in_core) { #cperl doesn't need these, CPAN does
       push @cannedkeys , qw(
 BuiltWithPatchPerl  Mcc PERL_PATCHLEVEL ccflags_nolargefiles    charbits
@@ -100,21 +100,20 @@ d_prctl_set_name    d_ptrdiff_t d_regcomp   d_remainder d_remquo    d_rint
 d_round d_scalbn    d_sfio  d_sin6_scope_id d_sockaddr_in6  d_sockaddr_sa_len
 d_stat  d_statfs_f_flags    d_statfs_s  d_static_inline d_statvfs   d_tgamma
 d_timegm    d_trunc d_truncl    d_ustat d_vms_case_sensitive_symbols
-d_wcscmp    d_wcsxfrm   defvoidused dl_so_eq_ext    dlltool doop_cflags
-doubleinfbytes  doublekind  doublemantbits  doublenanbytes  dtrace  extern_C
-found_libucb    git_branch  git_commit_date git_commit_id   git_commit_id_title
-git_describe    git_uncommitted_changes hash_func   i_assert    i_bfd   i_dld
-i_execinfo  i_fenv  i_gdbm_ndbm i_gdbmndbm  i_mallocmalloc  i_mntent
-i_quadmath  i_sfio  i_stdbool   i_stdint    i_sysmount  i_syspoll   i_sysstatfs
-i_sysstatvfs    i_sysvfs    i_ustat ieeefp_h    ldflags_nolargefiles
-libs_nolargefiles   libswanted_nolargefiles longdblinfbytes longdblkind
-longdblmantbits longdblnanbytes madlyh  madlyobj    madlysrc
-nv_overflows_integers_at    nvmantbits  op_cflags   perl_revision
-perl_static_inline  perl_subversion perl_version    pthread_h_first
-regexec_cflags  rm_try  sGMTIME_max sGMTIME_min sLOCALTIME_max  sLOCALTIME_min
-st_ino_sign st_ino_size targetsh    toke_cflags usecbacktrace   usecperl
-usedevel    usedtrace   usekernprocpathname usensgetexecutablepath  usequadmath
-usesfio vaproto voidflags
+d_wcscmp    d_wcsxfrm   defvoidused dl_so_eq_ext    doop_cflags doubleinfbytes
+doublekind  doublemantbits  doublenanbytes  dtrace  extern_C    found_libucb
+git_branch  git_commit_date git_commit_id   git_commit_id_title git_describe
+git_uncommitted_changes hash_func   i_assert    i_bfd   i_dld   i_execinfo
+i_fenv  i_gdbm_ndbm i_gdbmndbm  i_mallocmalloc  i_mntent    i_quadmath  i_sfio
+i_stdbool   i_stdint    i_sysmount  i_syspoll   i_sysstatfs i_sysstatvfs
+i_sysvfs    i_ustat ieeefp_h    ldflags_nolargefiles    libs_nolargefiles
+libswanted_nolargefiles longdblinfbytes longdblkind longdblmantbits
+longdblnanbytes madlyh  madlyobj    madlysrc    nv_overflows_integers_at
+nvmantbits  op_cflags   perl_revision   perl_static_inline  perl_subversion
+perl_version    pthread_h_first regexec_cflags  rm_try  sGMTIME_max sGMTIME_min
+sLOCALTIME_max  sLOCALTIME_min  st_ino_sign st_ino_size targetsh    toke_cflags
+usecbacktrace   usecperl    usedevel    usedtrace   usekernprocpathname
+usensgetexecutablepath  usequadmath usesfio vaproto voidflags
       );
   }
   for my $k (@cannedkeys) {
