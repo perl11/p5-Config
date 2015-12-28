@@ -65,10 +65,25 @@ sub STORE  { die "\%Config::Config is read-only\n" }
 *DELETE = *CLEAR = \*STORE; # Typeglob aliasing uses less space
 
 if (defined &DynaLoader::boot_DynaLoader) {
-    require XSLoader;
-    XSLoader::load(__PACKAGE__, $VERSION);
-    %Config = ();
-    tie %Config, 'Config';
+    # for non-cperl/non-builtin Dynaloader, Dynaloader needs some keys beforehand
+    if (!exists $INC{"DynaLoader.pm"} or $INC{"DynaLoader.pm"} ne 'dlboot_c.PL') {
+        #my @req_keys = qw(dlsrc dlext so libpth ldlibpthname path_sep);
+        no warnings 'redefine';
+        my $ver = $Config::VERSION;
+        require 'Config_mini.pl';
+        $Config::VERSION = $ver;
+        # bypass the XSLoader object version check
+        #undef &{$_} for qw(import TIEHASH DESTROY AUTOLOAD STORE);
+        require XSLoader;
+        XSLoader::load('Config');
+        #require DynaLoader;
+        #DynaLoader::bootstrap_inherit('Config');
+        #tie %Config, 'Config';
+    } else {
+       require XSLoader;
+       XSLoader::load('Config');
+       tie %Config, 'Config';
+    }
 } else {
     no warnings 'redefine';
     %Config:: = ();
