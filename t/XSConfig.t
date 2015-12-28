@@ -5,20 +5,20 @@ if (scalar keys %Config:: > 2) {
   exit;
 }
 
-require Config; #this is supposed to be XS config
+require Config; # this is supposed to be XS config
 require B;
 
 *isXSUB = !B->can('CVf_ISXSUB')
   ? sub { shift->XSUB }
-  : sub { shift->CvFLAGS & B::CVf_ISXSUB() }; #CVf_ISXSUB added in 5.9.4
+  : sub { shift->CvFLAGS & B::CVf_ISXSUB() }; # CVf_ISXSUB added in 5.9.4
 
-#is_deeply->overload.pm wants these 2 XS modules
-#can't be required once DynaLoader is removed later on
+# is_deeply->overload.pm wants these 2 XS modules
+# can't be required once DynaLoader is removed later on
 require Scalar::Util;
 eval { require mro; };
 my $cv = B::svref_2object(*{'Config::FETCH'}{CODE});
 unless (isXSUB($cv)) {
-  if (-d 'regen') { #on CPAN
+  if (-d 'regen') { # on CPAN
     warn "Config:: is not XS Config";
   } else {
     print "0..1 #SKIP Config:: is not XS Config, miniperl?\n";
@@ -58,8 +58,8 @@ ok(!isXSUB($cv), 'PP Config:: is PP');
 my $klenXS = scalar(keys %XSConfig);
 my $copy = 0;
 my %Config_copy;
-if (exists $XSConfig{canned_gperf}) { #fix up PP Config to look like XS Config
-  #to see in CPAN Testers reports if the builder had gperf or not
+if (exists $XSConfig{canned_gperf}) { # fix up PP Config to look like XS Config
+  # to see in CPAN Testers reports if the builder had gperf or not
   warn "This XS Config was built with the canned XS file\n";
   $copy = 1;
   for (keys %Config) {

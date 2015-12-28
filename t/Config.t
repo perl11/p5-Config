@@ -1,15 +1,14 @@
 #!./perl -w
 
 BEGIN {
-    eval {require 'xsc_test.pl'};#CPAN
-    require 'test.pl' if $@;#cperl
-
-    plan ('no_plan');
-
-    use_ok('Config');
+    eval {require 'xsc_test.pl'};# CPAN
+    require 'test.pl' if $@;     # cperl
 }
+plan ('no_plan');
+use_ok('Config');
 
 use strict;
+use Config;
 
 # Some (safe?) bets.
 
@@ -296,6 +295,5 @@ foreach my $lib (qw(applibexp archlibexp privlibexp sitearchexp sitelibexp
         }
     }
 }
-
 
 _diag ('@INC is:', @orig_inc) if $failed;

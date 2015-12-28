@@ -229,7 +229,6 @@ struct Perl_Config;
 #define MAX_HASH_VALUE 9478
 /* maximum key range = 9472, duplicates = 0 */
 
-
 static unsigned int
 Config_hash (register const char *str, register unsigned int len)
 {
@@ -6835,7 +6834,7 @@ Config_lookup (register const char *str, register unsigned int len)
       {(U16)(long)&((struct stringpool_t *)0)->stringpool_str9478,	T_INV,0,ALN64I"@@d_modfl_pow32_bug@@"}
     };
 
-#line 6838 "Config.xs"
+#line 6837 "Config.xs"
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
     {
       register int key = Config_hash (str, len);
