@@ -33,6 +33,11 @@ $TODO = 0;
 $NO_ENDING = 0;
 $Tests_Are_Passing = 1;
 
+BEGIN {
+    eval 'sub OPV () {'.$].'}';
+    sub OPV();
+}
+
 # Use this instead of print to avoid interference while testing globals.
 sub _print {
     local($\, $", $,) = (undef, ' ', '');
@@ -296,7 +301,7 @@ sub display {
     foreach my $x (@_) {
         if (defined $x and not ref $x) {
             my $y = '';
-            foreach my $c (unpack("W*", $x)) {
+            foreach my $c (unpack((OPV ge '5.009002' ? "W*" : "U*"), $x)) {
                 if ($c > 255) {
                     $y = $y . sprintf "\\x{%x}", $c;
                 } elsif ($backslash_escape{$c}) {

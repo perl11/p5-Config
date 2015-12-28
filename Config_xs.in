@@ -195,6 +195,7 @@ Config_lookup (register const char *str, register unsigned int len);
 struct Perl_Config;
 %%
 Author,			T_INV,0,ALN64I"@@Author@@"
+BuiltWithPatchPerl,	T_INV,0,ALN64I"@@BuiltWithPatchPerl@@"
 CONFIG,			T_INV,0,ALN64I"@@CONFIG@@"
 Date,			T_INV,0,ALN64I"@@Date@@"
 Header,			T_INV,0,ALN64I"@@Header@@"
