@@ -1,0 +1,13 @@
+version: 1.0.{build}
+skip_tags: true
+clone_depth: 1
+init:
+  - git config --global core.autocrlf input
+platform:
+  - x64
+  - x86
+# msvc10 is easier to multi-platform
+build_script:
+- call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /%PLATFORM% & perl Makefile.PL & nmake
+test_script:
+- nmake test

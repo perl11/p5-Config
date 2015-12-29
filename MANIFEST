@@ -1,3 +1,5 @@
+.travis.yml
+appveyor.yml
 Changes
 Config.pm
 Config_mini.pl.PL
@@ -10,8 +12,8 @@ Makefile.PL
 MANIFEST			This list of files
 README
 regen/regen_lib.pl
+t/xsc_test.pl
 t/Config.t
 t/XSConfig.t
 typemap
-xsc_test.pl
 XSConfig.pod
