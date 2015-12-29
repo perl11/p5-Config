@@ -26,3 +26,5 @@ Config_xs.tmp.in-new
 Config.xs
 Config_mini.pl
 Config_xs_heavy.pl
+UNINST_0
+UNINST_1

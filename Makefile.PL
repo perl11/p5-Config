@@ -2,6 +2,7 @@ use ExtUtils::MakeMaker;
 
 push(@ExtUtils::MakeMaker::Overridable, qw(pm_to_blib));
 my $in_core = ! -d "regen";
+our $uninst;
 WriteMakefile(
     'ABSTRACT'		=> 'Fast XS drop-in replacement for Config.pm with perfect hashing',
     'AUTHOR'		=> ($ExtUtils::MakeMaker::VERSION >= '6.58'
@@ -28,6 +29,8 @@ WriteMakefile(
                                       Config_xs.tmp.in-new Config_xs.tmp.out
                                       Config.c             Config_pm_mtime
                                       Config_mini.pl       Config_xs_heavy.pl
+                                      Config_def.old       UNINST_0
+                                      UNINST_1
                                       '},
     'PM' => {
         'Config.pm'      => '$(INST_LIBDIR)/Config.pm',
@@ -45,7 +48,40 @@ WriteMakefile(
     #XSOPT  => ' -nolinenumbers ',
 );
 
+use ExtUtils::Command ();
+
+{
+    local @ARGV;
+    unlink('UNINST_0');
+    unlink('UNINST_1');
+    # touch what we plan for UNINST to be in the makefile
+    @ARGV  = 'UNINST_'.($uninst ? '1' : '0');
+    ExtUtils::Command::touch();
+    # now touch Makefile.PL so the above doesn't trigger a rebuild
+    @ARGV = 'Makefile.PL';
+    ExtUtils::Command::touch();
+    # if Makefile.PL and poison target are the same second, no rebuild happens
+    sleep 1;
+    # Touch opposite of what we think UNINST will be in the makefile
+    # to force a rebuild. The only way this becomes a dependency of Makefile
+    # is to override the maketool on the command line
+    @ARGV  = 'UNINST_'.($uninst ? '0' : '1');
+    ExtUtils::Command::touch();
+}
+
+
 package MY;
+
+# feat req https://rt.cpan.org/Public/Bug/Display.html?id=110631
+sub post_initialize { # post_initialize() runs before constants()
+    $_[0]->{INSTALLDIRS} =  'perl'
+        if $_[0]->{UNINST}; # UNINST could be from @ARGV or %ENV or anywhere
+    $main::uninst = (!! $_[0]->{UNINST})+0;
+    # regen run of Makefile.PL gets UNINST val from maketool run
+    push @ARGV, 'UNINST=$(UNINST)';
+    '';
+}
+
 sub postamble {
     # Config.xs is a pseudotarget in nmake, not a disk file, in nmake
     # inference rules are triggered only by disk files with the same base name,
@@ -84,6 +120,16 @@ sub processPL {
     $processPL =~ s/ pm_to_blib//g;
     $processPL =~ s/PERLRUNINST/PERLRUN/g;
     return $processPL;
+}
+
+sub makefile {
+    my $makefile = $_[0]->SUPER::makefile(@_);
+    my $pos = index($makefile, '$(FIRST_MAKEFILE) : Makefile.PL $(CONFIGDEP)');
+    die 'can\'t match in sub makefile()' if $pos == -1;
+    substr($makefile, $pos,
+        length('$(FIRST_MAKEFILE) : Makefile.PL $(CONFIGDEP)'),
+               '$(FIRST_MAKEFILE) : Makefile.PL $(CONFIGDEP) UNINST_$(UNINST)');
+    return $makefile;
 }
 
 package main;

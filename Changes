@@ -1,5 +1,8 @@
 Revision history for XSConfig
 
+6.05_04 Tue, Dec 29, 2015  5:26:20 AM
+        -Fixed CPAN RT#110631 "make install UNINST=1" broke the installed perl
+
 6.05_03 Sun, Dec 27, 2015 11:15:33 PM
         -revert a Config_xs.out disk space saving tweak added in 6.04, with
          newer GCCs this causes walls of warnings while building XS Config, ex.
