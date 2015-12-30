@@ -4,18 +4,12 @@ clone_depth: 1
 init:
   - git config --global core.autocrlf input
 os: MinGW
-#platform:
-# - x64
-# - x86
-# i686-w64-mingw32 perl5.22 MSWin32-x86-multi-thread-64int
-# dmake
 install:
+  - choco install activeperl
+  - choco install make
   - perl -V
-  - perl -V:make
-  - SET PATH=%PATH%;C:\tools\mingw64\bin;C:\tools\mingw64\opt\bin
-  - mingw-get install mingw-developer-toolkit
-  - mingw-get install gperf
-  #- ppm install dmake
+  - echo %PATH%
+  #- SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%  
 build_script:
   - perl Makefile.PL
   - make
