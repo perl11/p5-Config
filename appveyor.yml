@@ -12,8 +12,14 @@ install:
   #- echo %PATH%
   #- curl -o C:\MinGW\bin\gperf.exe -L http://kent.dl.sourceforge.net/project/gnuwin32/gperf/3.0.1/gperf-3.0.1.exe
   - SET PATH=%PATH%;C:\MinGW\bin
+  - curl -o dmake.zip -L https://cpan.metacpan.org/authors/id/S/SH/SHAY/dmake-4.12.2.2.zip
+  - unzip dmake.zip
+
 build_script:
-  - perl Makefile.PL make=make
-  - C:\MinGW\bin\mingw32-make DFSEP=/ NOOP=true INST_ARCHLIB=blib/arch
+  - perl Makefile.PL make=dmake
+  - dmake\dmake
+  #- C:\MinGW\bin\mingw32-make DFSEP=/ NOOP=true INST_ARCHLIB=blib/arch
+
 test_script:
-  - C:\MinGW\bin\mingw32-make test DFSEP=/ NOOP=true
+  - dmake\dmake test
+  #- C:\MinGW\bin\mingw32-make test DFSEP=/ NOOP=true
