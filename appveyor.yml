@@ -3,15 +3,17 @@ skip_tags: true
 clone_depth: 1
 init:
   - git config --global core.autocrlf input
-os: MinGW
+# Mingw and Cygwin now builtin: http://www.appveyor.com/updates/2015/05/30
+#os: MinGW
 install:
   - choco install activeperl
-  - choco install make
+  #- choco install make
   - perl -V
-  - echo %PATH%
-  #- SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%  
+  #- echo %PATH%
+  #- curl -o C:\MinGW\bin\gperf.exe -L http://kent.dl.sourceforge.net/project/gnuwin32/gperf/3.0.1/gperf-3.0.1.exe
+  - SET PATH=%PATH%;C:\MinGW\bin
 build_script:
-  - perl Makefile.PL
-  - make
+  - perl Makefile.PL make=make
+  - C:\MinGW\bin\mingw32-make DFSEP=/ NOOP=true INST_ARCHLIB=blib/arch
 test_script:
-  - make test
+  - C:\MinGW\bin\mingw32-make test DFSEP=/ NOOP=true
