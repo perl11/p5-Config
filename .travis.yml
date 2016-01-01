@@ -55,9 +55,4 @@ install:
 script: "perl Makefile.PL && make && make test"
 
 notifications:
-  irc: "irc.perl.org#compiler"
-  recipients:
-    - perl-compiler@googlegroups.com
-  email:
-    on_success: change
-    on_failure: always
+  irc: "irc.perl.org#perl11"
