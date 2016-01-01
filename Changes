@@ -1,5 +1,8 @@
 Revision history for XSConfig
 
+6.06    Thu, Dec 31, 2015 11:18:29 PM
+        -Fixed ActivePerl specific test fail
+
 6.05_04 Tue, Dec 29, 2015  5:26:20 AM
         -Fixed CPAN RT#110631 "make install UNINST=1" broke the installed perl
 

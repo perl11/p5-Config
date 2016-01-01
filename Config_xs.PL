@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.05_04';
+$VERSION = '6.06';
 my $in_core;
 
 BEGIN {
@@ -82,7 +82,7 @@ while (<$in>) { # as in config.sh
     last if $_ eq '!END!';
     next if $in_core && /^perl_(version|subversion|revision)=/;
     my ($k,$v) = split(/=/,$_,2);
-    $v = substr($v, 1, length($v)-2);#strip start/end quotes, ' or "
+    $v = substr($v, 1, length($v)-2); # strip start/end quotes, ' or "
     #$v =~ s/\\/\\\\/g;
     $h{$k} = $v;
 }
@@ -93,7 +93,7 @@ while (<$in>) {
     chomp;
     last if $_ eq 'EOVIRTUAL';
     my ($k,$v) = split(/=/,$_,2);
-    $v = substr($v, 1, length($v)-2);#strip start/end quotes, ' or "
+    $v = substr($v, 1, length($v)-2); # strip start/end quotes, ' or "
     #$v =~ s/\\/\\\\/g;
     $h{$k} = $v;
 }
@@ -106,12 +106,12 @@ if ($in_core || -e $git) {
     while (<$in>) {
         chomp;
         last if $_ eq 'ENDOFGIT';
-        #some Config_git.pl that were generated, probably without a git binary
-        #available but with a .git dir in perl source tree
-        #contain a blank line before ENDOFGIT line
+        # some Config_git.pl that were generated, probably without a git binary
+        # available but with a .git dir in perl source tree
+        # contain a blank line before ENDOFGIT line
         next unless length $_;
         my ($k,$v) = split(/=/,$_,2);
-        $v = substr($v, 1, length($v)-2);#strip start/end quotes, ' or "
+        $v = substr($v, 1, length($v)-2); # strip start/end quotes, ' or "
         $h{$k} = $v;
     }
     close $in;
@@ -134,8 +134,8 @@ unless ($no_gperf) {
 }
 
 if ($gperf_ok) {
-    #make a customized .xs, not git tracked, smaller Config shared lib since
-    #we dont need a "universal" set of keys for all build configs of perl
+    # make a customized .xs, not git tracked, smaller Config shared lib since
+    # we dont need a "universal" set of keys for all build configs of perl
     gen_gperf_Config($xsin, $xsoutcustm, \%h);
     # postprocess the values a bit to generate a canned Config for CI/no gperf
     # reserve up to 20 config_args
@@ -151,7 +151,7 @@ incpth  installhtmldir  installhtmlhelpdir  ld_can_script   libdb_needs_pthread
 mad malloc_cflags   sysroot targetdir   targetenv   targethost  targetmkdir
 targetport  useversionedarchname
         );
-    unless ($in_core) { #cperl doesn't need these, CPAN does
+    unless ($in_core) { # cperl doesn't need these, CPAN does
         push @cannedkeys , qw(
 BuiltWithPatchPerl  Mcc PERL_PATCHLEVEL ccflags_nolargefiles    charbits
 config_heavy    d_acosh d_asctime64 d_asinh d_atanh d_attribute_deprecated
@@ -192,15 +192,26 @@ usensgetexecutablepath  usequadmath usesfio vaproto voidflags
     for my $k (@cannedkeys) {
         $h{$k} = '' unless exists $h{$k};
     }
-    gen_gperf_Config($xsin, $xsout, \%h); #generate git tracked
-    $xsout = $xsoutcustm; #use smaller build specific .xs
+    gen_gperf_Config($xsin, $xsout, \%h); # generate git tracked
+    $xsout = $xsoutcustm; # use smaller build specific .xs
 }
 
-#code in Config_heavy.pl to compute byteorder is customized/interpolated
-#for each build permutation of perl by configpm, the byteorder in the
-#Config_heavy.pl database is ignored, just use Config_heavy.pl to get byteorder
-#instead of copying the complicated code in configpm to here
+# code in Config_heavy.pl to compute byteorder is customized/interpolated
+# for each build permutation of perl by configpm. The byteorder in the
+# Config_heavy.pl database is ignored. Just use Config_heavy.pl to get byteorder
+# instead of copying the complicated code in configpm to here
 $h{byteorder} = $Config{byteorder};
+
+#these values are dynamically generated in ActivePerl::Config, freeze them
+if(defined &ActivePerl::PRODUCT && ! $ENV{ACTIVEPERL_CONFIG_DISABLE}){
+    $h{$_} = $Config{$_} foreach qw (
+        ar
+        cc
+        dlltool
+        ld
+        make
+    );
+}
 
 # and now patch the values into Config.xs
 open $in, '<', $xsout  or die "Error reading '$xsout': $!";
@@ -225,27 +236,27 @@ while (<$in>) {
             my $lv = length($v);
             die "the value of Config key $k is over permitted length"
               unless $lv <= 1<<15;
-            #an inline string stored directly in struct
+            # an inline string stored directly in struct
             if ($lv <= INLSIZE) {
               my $h = unpack('H['.(INLSIZE*2).']', $v);
-              $h .= '0' x ((INLSIZE*2)-length($h)); #null pad out to end of struct
+              $h .= '0' x ((INLSIZE*2)-length($h)); # null pad out to end of struct
               my @h = unpack("(A2)*", $h);
               $l = 'LENPACKINL('.$lv.', 0x'.$h[0].')';
-              $qv = '(void*)' if PTRSIZE == 4;
+              $qv = '(const char*)' if PTRSIZE == 4;
               if (BE) {
                 $qv = join('', $qv, '0x', @h[1,2,3,4]);
-                $qv = join('', $qv, ', (void*)0x', @h[5..12]) if (PTRSIZE == 8);
+                $qv = join('', $qv, ', (const char*)0x', @h[5..12]) if (PTRSIZE == 8);
               } else {
                 $qv = join('', $qv, '0x', @h[4,3,2,1]);
-                $qv = join('', $qv, ', (void*)0x', @h[12,11,10,9,8,7,6,5]) if (PTRSIZE == 8);
+                $qv = join('', $qv, ', (const char*)0x', @h[12,11,10,9,8,7,6,5]) if (PTRSIZE == 8);
               }
-            } else { #a regular C string
+            } else { # a regular C string
               $v =~ s/"/\\"/g;
               # $v =~ s/\\!/!/;
               # $v =~ s/\\ / /g;
               $qv = $v;
               $qv =~ s/(\\[^nrftacx"' ])/\\$1/g; # windows paths: \\ => \\\\
-              $qv =~ s/(\\[nrftacx ])/\\$1/g;  # \n => \\n, allowed escape chars
+              $qv =~ s/(\\[nrftacx ])/\\$1/g;    # \n => \\n, allowed escape chars
               $qv = '"'.$qv.'"';
               $l = $v =~ m/["'\\]/ ?
               # don't calculate C-style length [cperl #61], let C do it for us
@@ -257,10 +268,10 @@ while (<$in>) {
             }
           }
         } else { # $type eq 'T_INT'
-          if ($v >= SPTR_MIN && $v <= SPTR_MAX) { #can fit in a ptr
+          if ($v >= SPTR_MIN && $v <= SPTR_MAX) { # can fit in a ptr
             $l = 0;
             $qv = 'ALN64I (char *)'.$v;
-          } else {#str in C, IV in perl, will be atoi-ed, 64b IV on 32b perl
+          } else {# str in C, IV in perl, will be atoi-ed, 64b IV on 32b perl
             $l = length($v);
             $qv = '"'.$v.'"';
           }
@@ -277,9 +288,9 @@ close $in;
 close $xs;
 rename $xsout."_tmp", $xsout;
 
-#creates a not-valid-C/XS template for gperf, then runs it through gperf, then
-#fixes misc flaws in the C code gen of gperf in the C/XS file, the final
-#C/XS file has all the Config keys, but no Config values
+# creates a not-valid-C/XS template for gperf, then runs it through gperf, then
+# fixes misc flaws in the C code gen of gperf in the C/XS file.
+# The final C/XS file has all the Config keys, but no Config values.
 sub gen_gperf_Config {
     my $in;
     my ($xsin, $xsout, $h) = @_;
@@ -294,7 +305,7 @@ sub gen_gperf_Config {
 
     foreach my $k (sort { $a cmp $b } keys %$h) {
         my $tabs = "\t" x (3-((2+length($k))/8));
-        #generate gperf syntax section of Config_xs.in
+        # generate gperf syntax section of Config_xs.in
         printf $xs "%s,\t%s%s,0,ALN64I\"@@%s@@\"\n", $k, $tabs, 'T_INV', $k;
     }
     print $xs "%%\n";
