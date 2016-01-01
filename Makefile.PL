@@ -88,7 +88,9 @@ sub postamble {
     # not psuedotargets with the same base name, so specify the dependency
     # explicitly, dmake doesn't need this
     # is_make_type meth existed only in EUMM on Win32 until EUMM 7.02
-    return $_[0]->can('is_make_type') && $_[0]->is_make_type('nmake')
+    return $_[0]->can('is_make_type') &&
+                (  $_[0]->is_make_type('nmake')
+                || $_[0]->is_make_type('gmake'))
         ? '$(OBJECT) : Config.c'."\n\n".'Config.c : Config.xs'
         : '';
 }

@@ -1,0 +1,63 @@
+language: "perl"
+sudo: false
+perl:
+  - "5.22"
+  - "5.14"
+  - "5.22-dbg"
+  - "5.20"
+  - "5.18"
+  - "5.16"
+  - "5.12"
+  - "5.10"
+  - "5.8"
+  - "5.14-thr"
+  - "5.22-thr-dbg"
+  - "dev"
+  - "blead"
+
+addons:
+  apt:
+    packages:
+    - gperf
+  coverity_scan:
+    project:
+      name: "perl11/p5-Config"
+      description: "Config as XS"
+    build_command_prepend: "perl Makefile.PL"
+    build_command: "make -s -j4"
+    branch_pattern: coverity
+
+cache:
+  apt: true
+
+os:
+  - linux
+#  - osx
+# osx has no perlbrew
+
+branches:
+  only:
+    - master
+    - /smoke/
+    - /coverity/
+
+matrix:
+  fast_finish: true
+
+before_install:
+  - mkdir /home/travis/bin || true
+  - ln -s `which true` /home/travis/bin/cpansign
+  - eval $(curl https://travis-perl.github.io/init) --auto
+
+install:
+  - export COVERAGE=0 AUTOMATED_TESTING=1
+
+script: "perl Makefile.PL && make && make test"
+
+notifications:
+  irc: "irc.perl.org#compiler"
+  recipients:
+    - perl-compiler@googlegroups.com
+  email:
+    on_success: change
+    on_failure: always

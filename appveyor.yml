@@ -1,0 +1,28 @@
+version: 1.0.{build}
+skip_tags: true
+clone_depth: 1
+init:
+  - git config --global core.autocrlf input
+# Mingw and Cygwin now builtin: http://www.appveyor.com/updates/2015/05/30
+#os: MinGW
+
+environment:
+  # these variables are common to all jobs
+  matrix:
+    - USE_GPERF: 1
+    - USE_GPERF: 0
+
+cache:
+  - C:\gperf\gperf.exe -> appveyor.yml
+
+install:
+  #- perl -V
+  #- C:\MinGW\bin\mingw32-make -v
+  #- echo %PATH%
+  #if cache doesn't have it, download it
+  - if not exist C:\gperf\gperf.exe curl -o %TEMP%\gperf.zip http://kent.dl.sourceforge.net/project/gnuwin32/gperf/3.0.1/gperf-3.0.1-bin.zip && mkdir C:\gperf && cd C:\gperf && 7z e %TEMP%\gperf.zip bin\gperf.exe && cd C:\projects\p5-config
+  #put it in PATH if we want "with gperf" testing
+  - if %USE_GPERF% == 1 copy C:\gperf\gperf.exe C:\MinGW\bin\gperf.exe
+build_script:
+#do not let gmake find sh.exe (usually part of git for windows) in %PATH%
+- set PATH=C:\windows\system32;C:\Perl\site\bin;C:\Perl\bin;C:\windows;C:\MinGW\bin; && set ACTIVEPERL_CONFIG_DISABLE=1 && perl Makefile.PL MAKE=gmake && mingw32-make test
