@@ -26,7 +26,7 @@ WriteMakefile(
                                       'Config_xs_heavy.pl.PL' => 'Config_xs_heavy.pl')
                             )},
     'clean'		=> {FILES => 'Config.xs            Config_xs.out-new
-                                      Config_xs.tmp.in-new Config_xs.tmp.out
+                                      Config_xs.tmp.in-new Config_xs_tmp.out
                                       Config.c             Config_pm_mtime
                                       Config_mini.pl       Config_xs_heavy.pl
                                       Config_def.old       UNINST_0

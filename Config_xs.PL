@@ -62,7 +62,7 @@ my $xsin  = 'Config_xs.in';
 # gperf expanded canned template with empty values, a generated file
 my $xsout = 'Config_xs.out';
 # gperf expanded build specific template with empty values, a generated file
-my $xsoutcustm = 'Config_xs.tmp.out';
+my $xsoutcustm = 'Config_xs_tmp.out';
 # patched with our values, a generated file
 my $xstarg= 'Config.xs';
 
