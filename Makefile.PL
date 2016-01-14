@@ -1,4 +1,5 @@
 use ExtUtils::MakeMaker;
+use CPAN;
 
 push(@ExtUtils::MakeMaker::Overridable, qw(pm_to_blib));
 my $in_core = ! -d "regen";
@@ -74,9 +75,16 @@ package MY;
 
 # feat req https://rt.cpan.org/Public/Bug/Display.html?id=110631
 sub post_initialize { # post_initialize() runs before constants()
-    $_[0]->{INSTALLDIRS} =  'perl'
-        if $_[0]->{UNINST}; # UNINST could be from @ARGV or %ENV or anywhere
-    $main::uninst = (!! $_[0]->{UNINST})+0;
+# see if it is in CPAN's configs, this is for CPANTesters/automated installs
+    CPAN::HandleConfig->load();
+    if ($CPAN::Config->{make_install_arg} =~ /\QUNINST=1\E/) {
+        $_[0]->{UNINST} = $main::uninst = 1;
+    } else {
+    # from EUMM, UNINST could be from @ARGV or %ENV or anywhere
+        $main::uninst = (!! $_[0]->{UNINST})+0;
+    }
+
+    $_[0]->{INSTALLDIRS} =  'perl' if $main::uninst;
     # regen run of Makefile.PL gets UNINST val from maketool run
     push @ARGV, 'UNINST=$(UNINST)';
     '';

@@ -28,7 +28,10 @@ my $pos2nd = index($cfgdata, 'sub config_vars {', $pos1st);
 die 'Config_heavy.pl cant match' if $pos2nd == -1;
 
 $cfgdata  = substr($cfgdata, 0, $pos1st).
-q|sub config_sh {
+q|sub STORE  { die "\%Config::Config is read-only\n" }
+*DELETE = *CLEAR = \*STORE; # Typeglob aliasing uses less space
+
+sub config_sh {
     my $s = ' ' x 32000; # prealloc 32.000 byte, I got 33568
     $s = '';
     for my $k (sort &Config::KEYS) { # XXX sort Config::KEYS() is broken

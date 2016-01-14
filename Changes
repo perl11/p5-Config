@@ -1,5 +1,15 @@
 Revision history for XSConfig
 
+6.07    Thu, Jan 14, 2016 12:02:13 AM
+        -more common keys for CPAN Testers ("ARCH") and ActivePerl
+         ("config_arg21"-"config_arg23")
+        -Hardcode the pathsep logic for all supported platforms, w/o
+         File::Spec. (rurban)
+        -Config: fix length test with inc_version_list_init (rurban)
+        -Another fix attempt at CPAN RT#110631 and CPANTesters
+        -Move very rarely executed subs from Config.pm to Config_xs_heavy.pl to
+         match how PP Config does it, this saves a little bit of memory
+
 6.06    Thu, Dec 31, 2015 11:18:29 PM
         -Fixed ActivePerl specific test fail
         -Fix Config_xs.in warning: request for implicit conversion from 'void *'
