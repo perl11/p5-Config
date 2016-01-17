@@ -127,7 +127,7 @@ sub processPL {
     #for XS Config wasn't even built yet when Config_xs.PL runs, Config.xs is
     #not a .pm, so it can't be listed in EUMM's PM key which would otherwise
     #cause blib to NOT be -I'ed, so de-"-I" it manually
-    $processPL =~ s/ pm_to_blib//g;
+    $processPL =~ s/pm_to_blib/Config_xs.out Config_xs.in/g;
     $processPL =~ s/PERLRUNINST/PERLRUN/g;
     return $processPL;
 }

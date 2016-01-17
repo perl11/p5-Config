@@ -1,5 +1,14 @@
 Revision history for XSConfig
 
+6.08    Sat, Jan 16, 2016  8:06:52 PM
+        -more common keys for CPAN Testers and ActivePerl
+        -added diagnostics for ActiveState PPM builder error "t/XSConfig.t:
+         Perl lib version (5.20.1) doesn't match executable
+         'C:\Perl64-5.20\bin\perl.exe' version (5.20.3) at
+         C:\cpanfly-5.20\var\cpan\build\XSConfig-6.06-tA6CNU\blib\arch/Config_mini.pl
+         line 62.
+        -slightly smaller machine code that makes up the XSUBs
+
 6.07    Thu, Jan 14, 2016 12:02:13 AM
         -more common keys for CPAN Testers ("ARCH") and ActivePerl
          ("config_arg21"-"config_arg23")

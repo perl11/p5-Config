@@ -5,6 +5,12 @@
 use strict ;
 my $VERSION = '6.00';
 use ExtUtils::Command;
+use Data::Dumper;
+
+warn "Config_mini.pl.PL: this perl is at $^X ]=$] V=$^V\n";
+system("$^X -V");
+
+warn Dumper(\@INC);
 
 my $mini = searchdirs('Config_mini.pl', \@INC);
 if (! $mini) { #create it
@@ -19,9 +25,20 @@ if (! $mini) { #create it
     die "Found Config.pm is XS Config.pm, but sister file Config_mini.pl was "
         . "not found, broken XS Config install?"
         if index($cfgdata, 'Config_mini.pl') != -1;
+    warn "found Config.pm at $INC{'Config.pm'}\n";
+    print "XXXXXXXXXXXXXXXXXXXXXXXXX\n".$cfgdata."XXXXXXXXXXXXXXXXXXXXXXXXX\n";
     @ARGV = ($INC{'Config.pm'}, 'Config_mini.pl');
 } else {
     #completly redundant but copy it to make mkf happy
+    warn "found Config_mini.pl at $mini\n";
+    my $minidata;
+    {
+        open(my $fh, "<", $mini) or die $!;
+        local $/; # enable localized slurp mode
+        $minidata = <$fh>;
+        close $fh;
+    }
+    print "XXXXXXXXXXXXXXXXXXXXXXXXX\n".$minidata."XXXXXXXXXXXXXXXXXXXXXXXXX\n";
     @ARGV = ($mini, 'Config_mini.pl');
 }
 
