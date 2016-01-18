@@ -1,5 +1,10 @@
 Revision history for XSConfig
 
+6.09    Mon, Jan 18, 2016 10:31:19 AM
+        -more common keys for 5.8.7
+        -add compat with very old EUMMs and CPAN.pms (5.8.7 stock versions)
+        -fix misparsing of 5.8.7's PP Config_heavy.pl
+
 6.08    Sat, Jan 16, 2016  8:06:52 PM
         -more common keys for CPAN Testers and ActivePerl
         -added diagnostics for ActiveState PPM builder error "t/XSConfig.t:
