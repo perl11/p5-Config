@@ -1,5 +1,8 @@
 Revision history for XSConfig
 
+6.10    Mon, Jan 18, 2016 11:35:23 AM
+        -fixed incorrect perms inside CPAN tarball, no other changes
+
 6.09    Mon, Jan 18, 2016 10:31:19 AM
         -more common keys for 5.8.7
         -add compat with very old EUMMs and CPAN.pms (5.8.7 stock versions)
