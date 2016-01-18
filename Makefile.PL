@@ -1,5 +1,4 @@
 use ExtUtils::MakeMaker;
-use CPAN;
 
 push(@ExtUtils::MakeMaker::Overridable, qw(pm_to_blib));
 my $in_core = ! -d "regen";
@@ -88,14 +87,19 @@ package MY;
 # feat req https://rt.cpan.org/Public/Bug/Display.html?id=110631
 sub post_initialize { # post_initialize() runs before constants()
 # see if it is in CPAN's configs, this is for CPANTesters/automated installs
-    CPAN::HandleConfig->can('load') ?
-        CPAN::HandleConfig->load()
-        : CPAN::Config->load(); #old CPAN.pms
-    if ($CPAN::Config->{make_install_arg} =~ /\QUNINST=1\E/) {
-        $_[0]->{UNINST} = $main::uninst = 1;
+    if ($in_core) {
+        $main::uninst = 0;
     } else {
-    # from EUMM, UNINST could be from @ARGV or %ENV or anywhere
-        $main::uninst = (!! $_[0]->{UNINST})+0;
+        require CPAN;
+        CPAN::HandleConfig->can('load') ?
+            CPAN::HandleConfig->load()
+            : CPAN::Config->load(); #old CPAN.pms
+        if ($CPAN::Config->{make_install_arg} =~ /\QUNINST=1\E/) {
+            $_[0]->{UNINST} = $main::uninst = 1;
+        } else {
+        # from EUMM, UNINST could be from @ARGV or %ENV or anywhere
+            $main::uninst = (!! $_[0]->{UNINST})+0;
+        }
     }
 
     $_[0]->{INSTALLDIRS} =  'perl' if $main::uninst;
