@@ -3,6 +3,8 @@ use ExtUtils::MakeMaker;
 push(@ExtUtils::MakeMaker::Overridable, qw(pm_to_blib));
 my $in_core = ! -d "regen";
 our $uninst;
+my $version = MM->parse_version('Config.pm');
+
 WriteMakefile(
     'ABSTRACT'		=> 'Fast XS drop-in replacement for Config.pm with perfect hashing',
     'AUTHOR'		=> ($ExtUtils::MakeMaker::VERSION >= '6.58'
@@ -15,11 +17,14 @@ WriteMakefile(
         resources => {
             repository => 'https://github.com/perl11/p5-Config',
         },
+        provides => {
+            XSConfig => { file => 'Config.pm', version => $version },
+        },
     },
 #Config_heavy.pl didn't exist before 5.8.7, it was part of a huge Config.pm
 #not worth the time to modify Config_xs.PL and Config_xs_heavy.pl.PL
     'MIN_PERL_VERSION'  => '5.8.7',
-    'VERSION_FROM'	=> 'Config.pm',
+    'VERSION'		=> $version,
     'PL_FILES'		=> {'Config_xs.PL' => 'Config.xs',
                             ($in_core ?
                                 () : ('Config_mini.pl.PL'     => 'Config_mini.pl',

@@ -1,17 +1,16 @@
-# XSLoader for perl, not miniperl
+# This is XSConfig from CPAN that uses XSLoader
 
 # for a description of the variables, please have a look at the
 # Porting/Glossary file, or use the url:
 # http://perl5.git.perl.org/perl.git/blob/HEAD:/Porting/Glossary
 
-package XSConfig;
 package
     Config;
 use strict;
 use warnings;
 use vars '%Config', '$VERSION';
 
-$VERSION = '6.10';
+$VERSION = '6.11';
 
 # Skip @Config::EXPORT because it only contains %Config, which we special
 # case below as it's not a function. @Config::EXPORT won't change in the
