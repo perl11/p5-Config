@@ -36,20 +36,29 @@ if ($mini) {
     }
 }
 if (! $mini) { #create it
-    require Config;
-    my $cfgdata;
-    {
-        open(my $fh, "<", $INC{'Config.pm'}) or die $!;
-        local $/; # enable localized slurp mode
-        $cfgdata = <$fh>;
-        close $fh;
+# there will be 2 Config.pm'es in @INC if XSConfig was installed before
+    my @cfgs = searchdirslist('Config.pm', \@INC);
+    my $cfg;
+    foreach(@cfgs) {
+        my $cfgdata;
+        {
+            open(my $fh, "<", $_) or die $!;
+            local $/; # enable localized slurp mode
+            $cfgdata = <$fh>;
+            close $fh;
+        }
+        warn "found Config.pm at $_\n";
+        print "XXXXXXXXXXXXXXXXXXXXXXXXX\n".$cfgdata."XXXXXXXXXXXXXXXXXXXXXXXXX\n";
+        if (index($cfgdata, 'Config_mini.pl') != -1) {
+            warn "Found Config.pm is XS Config.pm, but sister file "
+                 ."Config_mini.pl was not found, broken XS Config install?";
+        } else {
+            $cfg = $_;
+            last;
+        }
     }
-    die "Found Config.pm is XS Config.pm, but sister file Config_mini.pl was "
-        . "not found, broken XS Config install?"
-        if index($cfgdata, 'Config_mini.pl') != -1;
-    warn "found Config.pm at $INC{'Config.pm'}\n";
-    print "XXXXXXXXXXXXXXXXXXXXXXXXX\n".$cfgdata."XXXXXXXXXXXXXXXXXXXXXXXXX\n";
-    @ARGV = ($INC{'Config.pm'}, 'Config_mini.pl');
+    die "Couldn't find a PP Config.pm" unless $cfg;
+    @ARGV = ($cfg, 'Config_mini.pl');
 }
 
 cp();
@@ -68,4 +77,16 @@ sub searchdirs {
         }
     }
     return $fullfn;
+}
+
+sub searchdirslist {
+    my($fn, $fullfn) = shift;
+    my @ret;
+    foreach my $d ( @{$_[0]} ) {
+        my $tmppath = $d.'/'.$fn;
+        if (-s $tmppath) {
+            push @ret, $tmppath;
+        }
+    }
+    return @ret;
 }

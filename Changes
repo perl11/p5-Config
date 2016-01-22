@@ -1,5 +1,9 @@
 Revision history for XSConfig
 
+6.12    Thu, Jan 21, 2016 11:12:51 PM
+        -Another attempt at fixing the PPM Builder and upgrading maint perl
+         problem
+
 6.11    Tue, Jan 19, 2016  5:02:50 PM
         -fix build failure when inside cperl in Makefile.PL
         -removed an unused hash and glob to save memory in Config.pm
