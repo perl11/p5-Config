@@ -1,5 +1,13 @@
 Revision history for XSConfig
 
+6.13    Tue, Feb 02, 2016  2:54:30 PM
+        -more common keys for CPAN Testers
+        -more diagnostics for PPM Builders
+        -build speed improvements
+        -shared library is some KBs smaller now due to tweaked gperf code gen
+        -less heap memory used than before
+        -updated XSConfig with new benchmarks
+
 6.12    Thu, Jan 21, 2016 11:12:51 PM
         -Another attempt at fixing the PPM Builder and upgrading maint perl
          problem

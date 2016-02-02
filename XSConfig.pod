@@ -4,7 +4,7 @@ XSConfig - Fast XS drop-in replacement for Config.pm with perfect hashing.
 
 =head1 VERSION
 
-Version 6.12
+Version 6.13
 
 =head1 SYNOPSIS
 
@@ -35,20 +35,18 @@ YOUR PATH BEFORE INSTALLING XS CONFIG.
 
 =head1 BENCHMARKS
 
-    perl -MXSLoader -MConfig -e"sleep 1000"
+    perl -MXSLoader -MConfig -E"say $Config{ccflags}; sleep 1000"
 
     Memory Usage KB	Total	Image Committed	Image Private	Heap Private
-    With PP Config	36,976	11,376		272		668
-    With XS Config	37,188	11,492		280		640
+    With PP Config	34,468	8,020		204		1120
+    With XS Config	33,564	8,120		212		652
 
-Using XSConfig 6.11, with a VC 2013 32 bit threaded perl, you save 20 KB of per
-process memory, in exchange for 108 KB of shared between process, memory mapped
-(Config.dll) memory. That is an increase in memory usage of 88 KB if you have
-just a single perl process ever running on the machine at a time, but around 4
-perl processes with XS Config, XS Config uses less memory than the equivelent
-group of perl processes with PP Config.
+Using XSConfig 6.13, with a VC 2013 32 bit threaded perl, you save 468 KB of per
+process memory, in exchange for 92 KB of shared between process, memory mapped
+(Config.dll) memory. Even if you have just a single perl process ever running
+on the machine at a time, you will still save 376 KB.
 
-The total size of Config.dll in memory is 116 KB, with 8 KB of
+The total size of Config.dll in memory is 100 KB, with 8 KB of
 unshareable memory, the rest is shared. The smallest (no XSUBs except boot)
 Win32 XS DLL without taking special measures is 24 KB, with 8 KB of unshareable
 memory. So around ~24 KB is the overhead of a Visual C 2013 DLL with all the
@@ -63,74 +61,72 @@ Raw data with XS Config
 
     C:\sources>timeit -f t.dat perl -MXSLoader -MConfig -e"print
     $Config::VERSION.\"\n\";my %h; %h = %Config for 0..1000"
-    6.11
+    6.13
     
     Version Number:   Windows NT 6.1 (Build 7601)
-    Exit Time:        4:32 pm, Tuesday, January 19 2016
-    Elapsed Time:     0:00:10.296
-    Process Time:     0:00:10.249
-    System Calls:     27201
-    Context Switches: 3953
-    Page Faults:      3497
-    Bytes Read:       94500
-    Bytes Written:    97108
-    Bytes Other:      13422
+    Exit Time:        2:32 pm, Tuesday, February 2 2016
+    Elapsed Time:     0:00:06.285
+    Process Time:     0:00:06.271
+    System Calls:     19974
+    Context Switches: 4317
+    Page Faults:      2334
+    Bytes Read:       73084
+    Bytes Written:    0
+    Bytes Other:      8528
     
     C:\sources>timeit -f t.dat perl -MXSLoader -MConfig -e"print
     $Config::VERSION.\"\n\";my $v; $v = $Config{'ccflags'} for 0..1000000;print
     $v"
-    6.11
+    6.13
     -nologo -GF -W3 -O1 -MD -Zi -DNDEBUG -GL -DWIN32 -D_CONSOLE -DNO_STRICT -D_CRT_S
     ECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE  -DPERL_TEXTMODE_SCRIPTS -DPERL_I
-    MPLICIT_CONTEXT -DPERL_IMPLICIT_SYS
+    MPLICIT_CONTEXT -DPERL_IMPLICIT_SYS -DWIN32_NO_REGISTRY
     Version Number:   Windows NT 6.1 (Build 7601)
-    Exit Time:        4:32 pm, Tuesday, January 19 2016
-    Elapsed Time:     0:00:05.226
-    Process Time:     0:00:05.226
-    System Calls:     12385
-    Context Switches: 1843
-    Page Faults:      2226
-    Bytes Read:       91738
+    Exit Time:        2:33 pm, Tuesday, February 2 2016
+    Elapsed Time:     0:00:03.168
+    Process Time:     0:00:03.151
+    System Calls:     11223
+    Context Switches: 2482
+    Page Faults:      2070
+    Bytes Read:       77180
     Bytes Written:    0
-    Bytes Other:      7528
+    Bytes Other:      7318
 
 With PP Config
 
     
     C:\sources>timeit -f t.dat perl -MXSLoader -MConfig -e"print
     $Config::VERSION.\"\n\";my %h; %h = %Config for 0..1000"
-    5.023005
+    5.023008
     
     Version Number:   Windows NT 6.1 (Build 7601)
-    Exit Time:        4:33 pm, Tuesday, January 19 2016
-    Elapsed Time:     0:00:16.068
-    Process Time:     0:00:16.005
-    System Calls:     42186
-    Context Switches: 5417
-    Page Faults:      4607
-    Bytes Read:       136490
+    Exit Time:        2:34 pm, Tuesday, February 2 2016
+    Elapsed Time:     0:00:09.907
+    Process Time:     0:00:09.843
+    System Calls:     39114
+    Context Switches: 7145
+    Page Faults:      3426
+    Bytes Read:       118536
     Bytes Written:    0
-    Bytes Other:      22281
+    Bytes Other:      13446
     
     C:\sources>timeit -f t.dat perl -MXSLoader -MConfig -e"print
     $Config::VERSION.\"\n\";my $v; $v = $Config{'ccflags'} for 0..1000000;print
     $v"
-    5.023005
+    5.023008
     -nologo -GF -W3 -O1 -MD -Zi -DNDEBUG -GL -DWIN32 -D_CONSOLE -DNO_STRICT -D_CRT_S
     ECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE  -DPERL_TEXTMODE_SCRIPTS -DPERL_I
-    MPLICIT_CONTEXT -DPERL_IMPLICIT_SYS
+    MPLICIT_CONTEXT -DPERL_IMPLICIT_SYS -DWIN32_NO_REGISTRY
     Version Number:   Windows NT 6.1 (Build 7601)
-    Exit Time:        4:33 pm, Tuesday, January 19 2016
-    Elapsed Time:     0:00:06.146
-    Process Time:     0:00:06.130
-    System Calls:     15062
-    Context Switches: 2248
-    Page Faults:      2381
-    Bytes Read:       131566
+    Exit Time:        2:35 pm, Tuesday, February 2 2016
+    Elapsed Time:     0:00:03.755
+    Process Time:     0:00:03.744
+    System Calls:     12721
+    Context Switches: 3152
+    Page Faults:      1392
+    Bytes Read:       113612
     Bytes Written:    0
-    Bytes Other:      8414
-    
-    C:\sources>
+    Bytes Other:      6674
 
 =head1 AUTHOR
 

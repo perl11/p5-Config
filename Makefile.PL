@@ -1,4 +1,8 @@
 use ExtUtils::MakeMaker;
+use Data::Dumper;
+
+print Dumper(\%ENV); # for PPM Builders, UNINST_* problems
+# http://ppm4.activestate.com/darwin/5.14/1400/B/BU/BULKDD/other/XSConfig-6.11.d/log-20160121T010722.txt
 
 push(@ExtUtils::MakeMaker::Overridable, qw(pm_to_blib));
 my $in_core = ! -d "regen";
@@ -100,6 +104,7 @@ sub post_initialize { # post_initialize() runs before constants()
             CPAN::HandleConfig->load()
             : CPAN::Config->load(); #old CPAN.pms
         if ($CPAN::Config->{make_install_arg} =~ /\QUNINST=1\E/) {
+            warn "found UNINST=1 in CPAN::Config";
             $_[0]->{UNINST} = $main::uninst = 1;
         } else {
         # from EUMM, UNINST could be from @ARGV or %ENV or anywhere
