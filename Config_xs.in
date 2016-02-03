@@ -125,7 +125,12 @@ my_newSVstaticpvn(pTHX_ const char *s, STRLEN len)
   SV * sv;
   if(!len)
     len = strlen(s);
+#if (PERL_BCDVERSION < 0x5008009) && ! defined(newSV_type)
+  sv = sv_newmortal();
+  sv_upgrade(sv, SVt_PV);
+#else
   sv = sv_2mortal(newSV_type(SVt_PV));
+#endif
   SvPVX(sv) = (char *)s;
   SvCUR_set(sv, len);
   SvLEN_set(sv, 0);

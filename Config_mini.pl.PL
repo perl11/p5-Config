@@ -6,10 +6,6 @@ use strict ;
 my $VERSION = '6.00';
 use ExtUtils::Command;
 
-BEGIN {
-
-}
-
 my $mini = searchdirs('Config_mini.pl', \@INC);
 if ($mini) {
     my $minidata;
