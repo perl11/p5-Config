@@ -2,9 +2,10 @@ use ExtUtils::MakeMaker;
 
 eval {
     require Data::Dumper;
-    print Dumper(\%ENV); # for PPM Builders, UNINST_* problems
+    print Data::Dumper::Dumper(\%ENV); # for PPM Builders, UNINST_* problems
 # http://ppm4.activestate.com/darwin/5.14/1400/B/BU/BULKDD/other/XSConfig-6.11.d/log-20160121T010722.txt
 };
+warn "require Data::Dumper failed with \"$@\"" if $@;
 
 push(@ExtUtils::MakeMaker::Overridable, qw(pm_to_blib));
 my $in_core = ! -d "regen";
