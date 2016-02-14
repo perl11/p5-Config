@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.15';
+$VERSION = '6.16';
 my $in_core;
 
 BEGIN {
@@ -206,7 +206,7 @@ installvendorscript ldflags_nolargefiles    libs_nolargefiles
 libswanted_nolargefiles longdblinfbytes longdblkind longdblmantbits
 longdblnanbytes madlyh  madlyobj    madlysrc    mistrustnm
 nv_overflows_integers_at    nvmantbits  op_cflags   perl_patchlevel
-perl_revision   perl_static_inline  perl_subversion perl_version
+perl_revision   perl_static_inline  perl_subversion perl_version    ppmarch
 pthread_h_first regexec_cflags  rm_try  run sGMTIME_max sGMTIME_min
 sLOCALTIME_max  sLOCALTIME_min  sitehtml1dir    sitehtml1direxp sitehtml3dir
 sitehtml3direxp siteman1dir siteman1direxp  siteman3dir siteman3direxp
@@ -237,6 +237,7 @@ if(defined &ActivePerl::PRODUCT && ! $ENV{ACTIVEPERL_CONFIG_DISABLE}){
     $h{$_} = $Config{$_} foreach qw (
         ar
         cc
+        ccversion
         dlltool
         ld
         make

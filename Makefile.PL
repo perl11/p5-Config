@@ -72,6 +72,8 @@ use ExtUtils::Command ();
     # now touch Makefile.PL so the above doesn't trigger a rebuild
     @ARGV = 'Makefile.PL';
     ExtUtils::Command::touch();
+    @ARGV = 'Makefile'; #we aren't inside WriteMakefile with open FH anymore
+    ExtUtils::Command::touch();
     # if Makefile.PL and poison target are the same second, no rebuild happens
     sleep 1;
     # Touch opposite of what we think UNINST will be in the makefile

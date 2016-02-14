@@ -1,5 +1,11 @@
 Revision history for XSConfig
 
+6.16    Sat, Feb 13, 2016 12:44:56 PM
+        -1 more common key for AP 5.16 CPAN Tester
+        -fix freezing of dynamic %Config value ccversion in AP 5.16 CPAN Tester
+        -fix possible race in timestamps between the older UNINST_* file and
+         the makefile (PPM Builder)
+
 6.15    Tue, Feb 09, 2016  1:03:44 PM
         -more common keys for CPAN Testers
         -more diagnostics for PPM Builders
