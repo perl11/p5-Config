@@ -8,15 +8,7 @@ use ExtUtils::Command;
 
 my $mini = searchdirs('Config_mini.pl', \@INC);
 if ($mini) {
-    my $minidata;
-    {
-        open(my $fh, "<", $mini) or die $!;
-        local $/; # enable localized slurp mode
-        $minidata = <$fh>;
-        close $fh;
-    }
     warn "found Config_mini.pl at $mini\n";
-    print "XXXXXXXXXXXXXXXXXXXXXXXXX\n".$minidata."XXXXXXXXXXXXXXXXXXXXXXXXX\n";
 
     require 'xsc_test.pl'; #Config_mini.pl.PL not in cperl, no eval needed
     # test if Config_mini.pl is usuable in a seperate process since
@@ -44,7 +36,6 @@ if (! $mini) { #create it
             close $fh;
         }
         warn "found Config.pm at $_\n";
-        print "XXXXXXXXXXXXXXXXXXXXXXXXX\n".$cfgdata."XXXXXXXXXXXXXXXXXXXXXXXXX\n";
         if (index($cfgdata, 'Config_mini.pl') != -1) {
             warn "Found Config.pm is XS Config.pm, but sister file "
                  ."Config_mini.pl was not found, broken XS Config install?";
