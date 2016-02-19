@@ -1,5 +1,8 @@
 Revision history for XSConfig
 
+6.18    Fri, Feb 19, 2016  2:48:58 PM
+        -import changes from cperl
+
 6.17    Tue, Feb 16, 2016 10:07:18 PM
         -remove diagnostics for PPM builders and CPAN testers, faster and less
          noisy build
