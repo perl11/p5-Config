@@ -215,6 +215,7 @@ Config_lookup (register const char *str, register unsigned int len);
 %readonly-tables
 
 struct Perl_Config;
+
 %%
 ARCH,			T_INV,0,ALN64I"@@ARCH@@"
 Author,			T_INV,0,ALN64I"@@Author@@"
@@ -326,6 +327,9 @@ config_arg33,		T_INV,0,ALN64I"@@config_arg33@@"
 config_arg34,		T_INV,0,ALN64I"@@config_arg34@@"
 config_arg35,		T_INV,0,ALN64I"@@config_arg35@@"
 config_arg36,		T_INV,0,ALN64I"@@config_arg36@@"
+config_arg37,		T_INV,0,ALN64I"@@config_arg37@@"
+config_arg38,		T_INV,0,ALN64I"@@config_arg38@@"
+config_arg39,		T_INV,0,ALN64I"@@config_arg39@@"
 config_arg4,		T_INV,0,ALN64I"@@config_arg4@@"
 config_arg5,		T_INV,0,ALN64I"@@config_arg5@@"
 config_arg6,		T_INV,0,ALN64I"@@config_arg6@@"

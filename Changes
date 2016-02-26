@@ -1,5 +1,9 @@
 Revision history for XSConfig
 
+6.19    Wed, Feb 24, 2016  3:39:17 AM
+        -import changes from cperl
+        -more common keys for CPAN Testers
+
 6.18    Fri, Feb 19, 2016  2:48:58 PM
         -import changes from cperl
 
