@@ -1,5 +1,17 @@
 Revision history for XSConfig
 
+6.20    2016-06-10 12:12:40 rurban
+        -merge with changes from cperl
+        -fix for readonly Makefile.PL (in core src tarballs)
+        -fix wrong SKIP headers
+        -skip in core make regen tests (--tap)
+        -more 5.24 and cperl keys
+        -silence unused classname compiler warning
+        -link to Mock::Config in the docs to temp. write to %Config in tests.
+        -with gperf do not change git controlled files, use _tmp files.
+        -add --verbose to see added canned keys.
+        -Dfortify_inc fixes
+
 6.19    Wed, Feb 24, 2016  3:39:17 AM
         -import changes from cperl
         -more common keys for CPAN Testers

@@ -13,7 +13,9 @@ blib
 pm_to_blib
 MANIFEST.bak
 MYMETA.*
+/log.test-*
 /*.patch
+/gperf.exe
 XSConfig-*
 ppcfg.txt
 xscfg.txt
@@ -21,8 +23,9 @@ cfg.diff
 Config_def.old
 Config_pm_mtime
 Config_xs.out-new
-Config_xs_tmp.out
+Config_xs_tmp.in
 Config_xs.tmp.in-new
+Config_xs_tmp.out
 Config.xs
 Config_mini.pl
 Config_xs_heavy.pl

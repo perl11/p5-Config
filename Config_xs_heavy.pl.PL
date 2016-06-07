@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 # create Config_xs_heavy.pl for CPAN from Config_heavy.pl in @INC
-#usage: perl Config_xs_heavy.pl.PL [ignored]
+# usage: perl Config_xs_heavy.pl.PL [ignored]
 
 use strict ;
-my $VERSION = '6.00';
+my $VERSION = '6.20';
 
 my $heavyfn = searchdirs('Config_heavy.pl', \@INC);
 die 'Config_heavy.pl not found' unless $heavyfn;

@@ -4,7 +4,7 @@ XSConfig - Fast XS drop-in replacement for Config.pm with perfect hashing.
 
 =head1 VERSION
 
-Version 6.19
+Version 6.20
 
 =head1 SYNOPSIS
 
@@ -33,6 +33,12 @@ Config.
 IT IS HIGHLY RECOMMENDED THAT YOU HAVE GPERF TOOL INSTALLED AND RUNNABLE FROM
 YOUR PATH BEFORE INSTALLING XS CONFIG.
 
+=head1 How to Mock a Config value?
+
+C<%Config> is now truly readonly. But some tests require to
+temporarily write a Config value. Use L<Mock::Config> from CPAN to do
+that.
+
 =head1 BENCHMARKS
 
     perl -MXSLoader -MConfig -E"say $Config{ccflags}; sleep 1000"
@@ -54,7 +60,7 @@ C compiler specific hidden static linked functions inside the DLL (these can
 be removed, but it is "special measures" that aren't typical on Win32 Perls).
 
 Onto performance, to slurp the entire tied %Config hash into a non-tied hash,
-with XS Config is %36 faster than with PP Config. To read 1 key in the tied
+with XS Config is 36% faster than with PP Config. To read 1 key in the tied
 %Config hash is 15% faster than with PP Config.
 
 Raw data with XS Config
@@ -135,8 +141,8 @@ Reini Urban C<< <rurban at cpanel.net> >>
 
 =head1 LICENSE AND COPYRIGHT
 
+Copyright (C) 2015, 2016 cPanel Inc
 Copyright (C) 2015, Daniel Dragan
-Copyright (C) 2015, cPanel Inc
  
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
