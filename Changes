@@ -1,5 +1,8 @@
 Revision history for XSConfig
 
+6.21    Sun, Jun 26, 2016  2:02:00 PM
+        -more common keys for CPAN Testers
+
 6.20    Sat, Jun 25, 2016 11:37:14 PM
         -import changes from cperl
           -fix for readonly Makefile.PL (in core src tarballs)
