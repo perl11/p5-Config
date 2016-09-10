@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.21';
+$VERSION = '6.22';
 my $in_core;
 
 BEGIN {
@@ -46,7 +46,7 @@ use Config ;
 if ($in_core) {
     require '../../regen/regen_lib.pl';
 } else {
-    require 'regen/regen_lib.pl';
+    require './regen/regen_lib.pl';
 }
 
 ###########################################################################
