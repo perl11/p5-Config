@@ -54,7 +54,7 @@ WriteMakefile(
 
 use ExtUtils::Command ();
 
-{
+unless ($ENV{PERL_CORE}) {
     local @ARGV;
     unlink('UNINST_0');
     unlink('UNINST_1');
@@ -167,6 +167,7 @@ sub processPL {
 sub makefile {
     my $makefile = $_[0]->SUPER::makefile(@_);
     my $pos = index($makefile, '$(FIRST_MAKEFILE) : Makefile.PL $(CONFIGDEP)');
+    return $makefile if $in_core;
     die 'can\'t match in sub makefile()' if $pos == -1;
     substr($makefile, $pos,
         length('$(FIRST_MAKEFILE) : Makefile.PL $(CONFIGDEP)'),
