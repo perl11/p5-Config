@@ -37,18 +37,17 @@ WriteMakefile(
                                       Config_xs_heavy.pl   Config_def.old
                                       UNINST_0             UNINST_1
                                       ')},
+    # XS Config can not be loaded by P5P DynaLoader, only by XSLoader WITHOUT
+    # XSLoader passing the "complicated" loading scenario to DynaLoader.
+    # P5P DL use'es Config, to get $Config{dlext}, a bootstraping problem for XS
+    # Config, XSLoader passes onto DynaLoader if the auto/Config/Config.dll is
+    # not in the same @INC dir as Config.pm, so put Config.pm in /arch.
     'PM' => {
         'Config.pm'     => '$(INST_ARCHLIBDIR)/Config.pm',
         ($in_core ? () : ('Config_mini.pl'     => '$(INST_ARCHLIBDIR)/Config_mini.pl',
                           'Config_xs_heavy.pl' => '$(INST_ARCHLIBDIR)/Config_xs_heavy.pl',
                           'XSConfig.pod'       => '$(INST_ARCHLIBDIR)/XSConfig.pod')),
     },
-    # XS Config can not be loaded by P5P DynaLoader, only by XSLoader WITHOUT
-    # XSLoader passing the "complicated" loading scenario to DynaLoader.
-    # P5P DL use'es Config, to get $Config{dlext}, a bootstraping problem for XS
-    # Config, XSLoader passes onto DynaLoader if the auto/Config/Config.dll is
-    # not in the same @INC dir as Config.pm, so put Config.pm in /arch.
-    ($in_core ? () : (INST_LIB => '$(INST_ARCHLIB)')),
 
     #XSOPT  => ' -nolinenumbers ',
 );
@@ -149,8 +148,8 @@ sub pm_to_blib {
 ');
     chomp($blib); #old EUMMs dont have a newline at the end, new ones do
     return $blib.'
-	$(NOECHO) $(CHMOD) $(PERM_RW) $(INST_LIB)/Config.pm
-	$(NOECHO) $(EQUALIZE_TIMESTAMP) Config_pm_mtime $(INST_LIB)/Config.pm';
+	$(NOECHO) $(CHMOD) $(PERM_RW) $(INST_ARCHLIBDIR)/Config.pm
+	$(NOECHO) $(EQUALIZE_TIMESTAMP) Config_pm_mtime $(INST_ARCHLIBDIR)/Config.pm';
 }
 
 sub processPL {
