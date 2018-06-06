@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.22';
+$VERSION = '6.23';
 my $in_core;
 
 BEGIN {
@@ -54,8 +54,14 @@ if ($in_core) {
 my $force = @ARGV ? $ARGV[0] eq '--force' : 0;
 shift if $force;
 exit if $ARGV[0] eq '--tap';
+my $regen = @ARGV ? $ARGV[0] eq '--regen' : 0;
+shift if $regen;
 my $no_gperf = @ARGV ? $ARGV[0] eq '--no-gperf' : 0;
 shift if $no_gperf;
+my $gperf = "gperf";
+if (@ARGV>1 && $ARGV[0] eq '--gperf') {
+  shift; $gperf = shift;
+}
 my $verbose = @ARGV ? $ARGV[0] eq '--verbose' : 0;
 shift if $verbose;
 my $pathsep = $^O =~ /^(MSWin32|dos|NetWare|OS2|symbian)$/ ? "\\" : '/';
@@ -129,12 +135,12 @@ if ($in_core || -e $git) {
 # Test if gperf works. if not patch canned xsout instead.
 unless ($no_gperf) {
     local $!;
-    $gperf_ok = !(system("gperf --output-file=${xsout}_tmp gperftest.in") >> 8);
+    $gperf_ok = !(system("$gperf --output-file=${xsout}_tmp gperftest.in") >> 8);
     if ($gperf_ok and -z $xsout."_tmp") {
         $gperf_ok = 0;
     }
     unlink $xsout."_tmp";
-    print STDERR "gperf ",$gperf_ok ? "works ok\n" : "does not work\n";
+    print STDERR "$gperf ",$gperf_ok ? "works ok\n" : "does not work. $!\n";
     unless ($gperf_ok) {
         if ($in_core) {
             print STDERR "Please install gperf for higher efficiency.\n";
@@ -236,7 +242,8 @@ vendorscript    vendorscriptexp voidflags   yacc    yaccflags
             $h{$k} = '';
         }
     }
-    gen_gperf_Config($xsin, $xsout, \%h); # generate git tracked
+    #dont regen the git tracked canned hash inside cperl unless requested
+    gen_gperf_Config($xsin, $xsout, \%h) if $regen || ! $in_core;
     $xsout = $xsoutcustm; # use smaller build specific .xs
 }
 
@@ -270,13 +277,13 @@ while (<$in>) {
         if ($type eq 'T_STR') {
             if ($v eq 'undef') {
                 $l  = 0;
-                $qv = 'ALN64I VUNDEF'
+                $qv = 'ALN64I (char*)VUNDEF'
             } elsif ($v eq 'define') {
                 $l  = 0;
-                $qv = 'ALN64I VDEFINE'
+                $qv = 'ALN64I (char*)VDEFINE'
           } elsif ($v eq '') {
               $l  = 0;
-              $qv = 'ALN64I VEMPTY'
+              $qv = 'ALN64I (char*)VEMPTY'
         } else { # a string in ASCII/characters
             my $lv = length($v);
             die "the value of Config key $k is over permitted length"
@@ -425,8 +432,12 @@ __inline
         # open parenthesis
         s/sizeof\(/sizeof (/g;
 
+        # fixup gperf 3.1 lookup signature. max U32 keys
+        s{\QConfig_lookup (register const char *str, register size_t len)\E}
+         {Config_lookup (register const char *str, register unsigned int len)};
+
         # fixup U16
-        s/\(int\)\(long\)\&/(U16)(long)&/g;
+        s/\(int\)\((long|size_t)\)\&/(U16)($1)&/g;
         s/\Qregister int o = wordlist[key].name\E/register U16 o = wordlist[key].name/;
         s/\Qif (o >= 0)\E\n/if (o != XCNAME_MAX)\n/;
 

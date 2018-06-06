@@ -18,6 +18,8 @@ require B;
 #can't be required once DynaLoader is removed later on
 require Scalar::Util;
 eval { require mro; };
+#Test::More based on Test2 (1.3XXXXX) will load POSIX XS module
+require Test::More;
 my $cv = B::svref_2object(*{'Config::FETCH'}{CODE});
 unless (isXSUB($cv)) {
   if (-d 'regen') { #on CPAN
@@ -49,7 +51,6 @@ undef( *main::XSLoader::);
 require 'Config_mini.pl';
 Config->import();
 require 'Config_heavy.pl';
-require Test::More;
 Test::More->import (tests => 4);
 
 ok(isXSUB($cv), 'XS Config:: is XS');
@@ -151,6 +152,7 @@ vendorscript    vendorscriptexp voidflags   yacc    yaccflags
   is (scalar(keys %Config), $klenXS, 'same key count');
 }
 
+#is_deeply(got==PP, expect==XS)
 is_deeply ($copy ? \%Config_copy : \%Config, \%XSConfig, "cmp PP to XS hashes");
 
 # old Test::Builders dont have is_passing

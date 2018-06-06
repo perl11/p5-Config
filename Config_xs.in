@@ -1,7 +1,8 @@
 %{/* -*- mode: c; c-basic-offset: 4; -*-
 
-Copyright (C) 2015, 2016 cPanel Inc
+Copyright (C) 2015-2017 cPanel Inc
 Copyright (C) 2015 Daniel Dragan
+Copyright (C) 2017 Reini Urban
 
 =head1 NAME
 
@@ -187,9 +188,9 @@ typedef UV CFGSELF; /* for typemap */
 #endif
 
 /* special constants for T_STR when len == 0 */
-#define VUNDEF  ((char *)0) /* undef */
-#define VEMPTY  ((char *)1) /* empty string */
-#define VDEFINE ((char *)2) /* define */
+#define VUNDEF  0 /* undef */
+#define VEMPTY  1 /* empty string */
+#define VDEFINE 2 /* define */
 
 enum Config_types {
     T_STR, /* a low value integer constant in pointer member if len == 0

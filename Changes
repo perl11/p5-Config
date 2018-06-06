@@ -1,5 +1,15 @@
 Revision history for XSConfig
 
+6.23    Wed, Jun 06, 2018  1:16:20 AM
+        -import changes from cperl
+          -fixed cast to pointer not allowed (C++ build)
+          -changed rurban email address
+          -patch Config_lookup()'s prototype for key len to be 32 bits as
+           before because gperf 3.1 changed it to 64 bit key length
+           See cperl#286
+          -dont regen canned gperf hash when in core/cperl
+        -fixed XSConfig.t to work with newer Test::More based off Test2
+
 6.22    2016-09-10 21:06:56 rurban
         -protect sv in END during global destruction, esp. with B::C
         -fixes for no . in @INC (cperl or -Dfortify_inc)
