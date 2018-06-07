@@ -19,21 +19,16 @@ my @lines;
 my $line;
 foreach my $key (@keys) {
     my $align;
-    if (length $line) {
-        $align = (ceil((length $line)/4)*4)-length $line;
-        unless($align) { #need atleast 1 space between keys
-            $line .= ' ';
-            $align = (ceil((length $line)/4)*4)-length $line;
-        }
-    }
-
+    $align = (ceil((length $line)/4)*4)-length $line;
     if(length($line) + $align + length($key) > 79) {
+        chop($line); #remove space at end of line
         push @lines, $line;
-        $line = $key;
+        $line = $key . ' ';
     } else {
         $line .= ' ' x $align;
-        $line .= $key;
+        $line .= $key . ' ';
     }
 }
 $, = "\n";
+chop($line);
 print @lines, $line;

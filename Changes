@@ -9,8 +9,15 @@ Revision history for XSConfig
            See cperl#286
           -dont regen canned gperf hash when in core/cperl
         -fixed XSConfig.t to work with newer Test::More based off Test2
+        -more common keys for CPAN Testers
+        -fixed XSConfig.t to work with newer Test::More based off Test2
+        -fixed genkeys.PL tool generated randomly trailing space at the end of
+         each qw() line. Now there will be no extra trailing whitespace on those
+         lines.
+        -fixed Config_xs.PL to read %Config keys from perl distros using
+         Portable.pm
 
-6.22    2016-09-10 21:06:56 rurban
+6.22    2016-09-10 21:06:56 rurban (never released)
         -protect sv in END during global destruction, esp. with B::C
         -fixes for no . in @INC (cperl or -Dfortify_inc)
 
