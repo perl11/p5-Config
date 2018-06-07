@@ -1,5 +1,10 @@
 Revision history for XSConfig
 
+6.24    Thu, Jun 07, 2018  2:56:27 PM
+        -more common keys for CPAN Testers
+        -soft delete keys in the pre-generated fallback hash for systems without
+         gperf, this saves a couple KBs of disk/memory
+
 6.23    Wed, Jun 06, 2018  1:16:20 AM
         -import changes from cperl
           -fixed cast to pointer not allowed (C++ build)

@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.23';
+$VERSION = '6.24';
 my $in_core;
 
 BEGIN {
@@ -177,7 +177,7 @@ useversionedarchname
     unless ($in_core) { # cperl doesn't need these, CPAN does
         push @cannedkeys , qw(
 
-ARCH    BuiltWithPatchPerl  Mcc PERL_PATCHLEVEL ansi2knr
+ARCH    BuiltWithPatchPerl  Mcc PATH    PERL_PATCHLEVEL ansi2knr
 ccflags_nolargefiles    charbits    config_heavy    d_accept4   d_acosh
 d_asctime64 d_asinh d_atanh d_attribut  d_attribute_deprecated
 d_attribute_format  d_attribute_malloc  d_attribute_nonnull
@@ -222,8 +222,8 @@ d_timegm    d_trunc d_truncl    d_unlinkat  d_unsetenv  d_uselocale d_ustat
 d_vendorscript  d_vms_case_sensitive_symbols    d_volatile  d_vprintf
 d_vsnprintf d_wcscmp    d_wcsxfrm   default_inc_excludes_dot    defvoidused
 dl_so_eq_ext    doop_cflags doubleinfbytes  doublekind  doublemantbits
-doublenanbytes  dtrace  extern_C    found_libucb    from    gccansipedantic
-git_branch  git_commit_id   git_commit_id_title git_describe
+doublenanbytes  dtrace  dtracexnolibs   extern_C    found_libucb    from
+gccansipedantic git_branch  git_commit_id   git_commit_id_title git_describe
 git_uncommitted_changes gnulibc_version hash_func   html1dir    html1direxp
 html3dir    html3direxp i_assert    i_bfd   i_dld   i_execinfo  i_fenv  i_float
 i_gdbm_ndbm i_gdbmndbm  i_mallocmalloc  i_math  i_memory    i_mntent
@@ -261,6 +261,10 @@ vendorscript    vendorscriptexp voidflags   yacc    yaccflags
     gen_gperf_Config($xsin, $xsout, \%h) if $regen || ! $in_core;
     $xsout = $xsoutcustm; # use smaller build specific .xs
 }
+#add marker key so we know for testing the larger canned gperf hash was used
+else {
+    $h{canned_gperf} = '';
+}
 
 # code in Config_heavy.pl to compute byteorder is customized/interpolated
 # for each build permutation of perl by configpm. The byteorder in the
@@ -290,7 +294,7 @@ if(defined &ActivePerl::PRODUCT && ! $ENV{ACTIVEPERL_CONFIG_DISABLE}){
 #fetch runtime computed ones, but this portable perl wont be portable any
 #further after XSConfig is installed
 if($INC{'Portable.pm'}) {
-    $h{$_} = $Config{$_} foreach qw (
+    foreach(qw (
 archlib archlibexp  bin binexp  incpath installarchlib  installbin
 installprefix   installprefixexp    installprivlib  installscript
 installsitearch installsitebin  installsitelib  installsitescript
@@ -302,15 +306,42 @@ siteprefixexp   sitescript  sitescriptexp   usrinc  vendorarch  vendorarchexp
 vendorbin   vendorbinexp    vendorhtml1dir  vendorhtml3dir  vendorlib
 vendorlibexp    vendorman1dir   vendorman3dir   vendorprefix    vendorprefixexp
 vendorscript    vendorscriptexp
-    );
+    )) {
+        $h{$_} = $Config{$_} if exists $Config{$_};
+    }
 }
 
+my $inside_stringpool;
 # and now patch the values into Config.xs
 open $in, '<', $xsout  or die "Error reading '$xsout': $!";
 open $xs, '>', $xstarg or die "Error writing '$xstarg': $!";
 while (<$in>) {
-    if (/0,ALN64I"@@(\w+)@@"/) {
+    if (!$gperf_ok
+           && /    char stringpool_str\d+\[sizeof \("([^"]+)"\)\];\n/) {
+        #"soft" remove stringpool keys from canned gperf if they are not in PP config
+        #this saves some space but rerunning gperf is more space efficient to
+        #have less holes in the hash
+        if(! exists $h{$1}) {
+            $_ = '';
+        }
+    }
+    elsif (!$gperf_ok && /static const struct stringpool_t stringpool_contents =/){
+        $inside_stringpool = 1;
+    }
+    elsif (!$gperf_ok && $inside_stringpool && /    "([^"]+)",/) {
+        if(! exists $h{$1}) { #soft delete for canned hash
+            $_ = '';
+        }
+    }
+    elsif($inside_stringpool && $_ eq '  };') {
+        $inside_stringpool = 0;
+    }
+    elsif (/0,ALN64I"@@(\w+)@@"/) {{
         my $k = $1;
+        unless (exists $h{$k}){ #soft delete for canned hash
+            $_ = "{XSCNO},\n";
+            last;
+        }
         my $v = $h{$k};
         my $type = t_type($v);
         my ($qv, $l);
@@ -373,10 +404,9 @@ while (<$in>) {
         my $new = $type.', '. $l . ', ' . $qv ;
         s/T_\w+,0,ALN64I"\@\@$k\@\@"/$new/; # we have one line per key only
         chomp;
-        print $xs $_, " /* $k */\n";
-    } else {
-        print $xs $_;
-    }
+        $_ .= " /* k=$k v=$v*/\n";
+    }} #double } for last stmt
+    print $xs $_;
 }
 close $in;
 close $xs;
