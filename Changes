@@ -1,5 +1,11 @@
 Revision history for XSConfig
 
+6.25    Fri Jun 15 13:58:31 EDT 2018
+        -silence C warnings on 64 bit builds
+        -revise freezing of ActivePerl's runtime Config code (dlltool key
+         difference between PP and XS on old AP 5.14)
+        -more common keys for cperl and CPAN Testers
+
 6.24    Thu, Jun 07, 2018  2:56:27 PM
         -more common keys for CPAN Testers
         -soft delete keys in the pre-generated fallback hash for systems without
