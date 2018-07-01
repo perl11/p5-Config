@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.25_01';
+$VERSION = '6.26';
 my $in_core;
 
 BEGIN {

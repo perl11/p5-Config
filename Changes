@@ -1,4 +1,8 @@
 Revision history for XSConfig
+6.26    Sun, Jul 01, 2018  4:01:17 PM
+        -version bump because most CPAN Testers builders dont test alpha
+         versions
+
 6.25_01 Thu, Jun 28, 2018  3:04:14 PM
         -revisited a bug and revised a test in Config.t
         -more common keys for CPAN Testers
