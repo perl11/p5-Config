@@ -1,4 +1,9 @@
 Revision history for XSConfig
+6.25_01 Thu, Jun 28, 2018  3:04:14 PM
+        -revisited a bug and revised a test in Config.t
+        -more common keys for CPAN Testers
+        -add Makefile.PL debugging code for
+         http://www.cpantesters.org/cpan/report/67c67f60-75b5-11e8-8fb1-ef5133556b3f
 
 6.25    Fri Jun 15 13:58:31 EDT 2018
         -silence C warnings on 64 bit builds

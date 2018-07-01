@@ -19,7 +19,7 @@
 #    lib/Config_git.pl
 #
 
-$VERSION = '6.25';
+$VERSION = '6.25_01';
 my $in_core;
 
 BEGIN {
@@ -180,9 +180,9 @@ targetport  useversionedarchname
     unless ($in_core) { # cperl doesn't need these, CPAN does
         push @cannedkeys , qw(
 
-ARCH    BuiltWithPatchPerl  Mcc PATH    PERL_PATCHLEVEL ansi2knr
-ccflags_nolargefiles    charbits    config_heavy    d_accept4   d_acosh
-d_asctime64 d_asinh d_atanh d_attribut  d_attribute_deprecated
+ARCH    BuiltWithPatchPerl  Mcc PATH    PERL_PATCHLEVEL ansi2knr    arflags
+ccflags_nolargefiles    cf_epoch    charbits    config_heavy    d_accept4
+d_acosh d_asctime64 d_asinh d_atanh d_attribut  d_attribute_deprecated
 d_attribute_format  d_attribute_malloc  d_attribute_nonnull
 d_attribute_noreturn    d_attribute_pure    d_attribute_unused
 d_attribute_warn_unused_result  d_backtrace d_bcmp  d_bcopy
