@@ -51,6 +51,7 @@ before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto
 
 install:
+  - cpan-install --deps
   - export COVERAGE=0 AUTOMATED_TESTING=1
 
 script: "perl Makefile.PL && make && make test"
